@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.example.expressions.model/src" modelPluginID="org.example.expressions.model"
+    modelName="Expressions" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>Expressions.ecore</foreignModel>
+  <genPackages prefix="Expressions" disposableProviderFactory="true" ecorePackage="Expressions.ecore#/">
+    <genClasses ecoreClass="Expressions.ecore#//ExpressionsModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//ExpressionsModel/statements"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Statements">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Statements/elements"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//AbstractElement"/>
+    <genClasses ecoreClass="Expressions.ecore#//Loop">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Loop/expression"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Loop/body"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Condition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Condition/expression"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Condition/ifz"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Condition/elsez"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Block">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Block/statements"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//FunDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//FunDefinition/varNames"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expressions.ecore#//FunDefinition/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//InlineFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//InlineFunction/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//ComplexFunction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//ComplexFunction/body"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//VarOrParam">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expressions.ecore#//VarOrParam/name"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Parameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expressions.ecore#//Parameter/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Variable">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Variable/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//EvalExpression">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//EvalExpression/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Expression"/>
+    <genClasses ecoreClass="Expressions.ecore#//FunParam"/>
+    <genClasses ecoreClass="Expressions.ecore#//FunCall">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expressions.ecore#//FunCall/function"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//FunCall/params"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Or">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Or/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Or/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//And">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//And/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//And/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Equality">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Equality/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expressions.ecore#//Equality/op"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Equality/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Comparison">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Comparison/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expressions.ecore#//Comparison/op"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Comparison/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Plus">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Plus/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Plus/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Minus">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Minus/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Minus/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//MulOrDiv">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//MulOrDiv/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expressions.ecore#//MulOrDiv/op"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//MulOrDiv/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Not">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Not/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//IntConstant">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expressions.ecore#//IntConstant/value"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//StringConstant">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expressions.ecore#//StringConstant/value"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//BoolConstant">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expressions.ecore#//BoolConstant/value"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//VarOrParamRef">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expressions.ecore#//VarOrParamRef/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//FunParamExp">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//FunParamExp/expr"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//FunParamCapture">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expressions.ecore#//FunParamCapture/variable"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//Context">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Expressions.ecore#//Context/values"/>
+    </genClasses>
+    <genClasses ecoreClass="Expressions.ecore#//StringToValueBindingMap">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Expressions.ecore#//StringToValueBindingMap/key"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Expressions.ecore#//StringToValueBindingMap/value"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Expressions.ecore#//Value"/>
+    <genClasses ecoreClass="Expressions.ecore#//IntValue"/>
+    <genClasses ecoreClass="Expressions.ecore#//BoolValue"/>
+    <genClasses ecoreClass="Expressions.ecore#//StringValue"/>
+  </genPackages>
+</genmodel:GenModel>

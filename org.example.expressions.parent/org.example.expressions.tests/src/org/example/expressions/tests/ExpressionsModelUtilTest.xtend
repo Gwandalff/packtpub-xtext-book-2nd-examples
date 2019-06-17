@@ -8,12 +8,12 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.example.expressions.ExpressionsModelUtil
-import org.example.expressions.expressions.ExpressionsModel
-import org.example.expressions.expressions.VariableRef
+import org.example.expressions.model.expressions.ExpressionsModel
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import static extension org.junit.Assert.*
+import org.example.expressions.model.expressions.VarOrParamRef
 
 @RunWith(XtextRunner)
 @InjectWith(ExpressionsInjectorProvider)
@@ -59,15 +59,16 @@ class ExpressionsModelUtilTest {
 
 	def private void assertVariablesDefinedBefore(ExpressionsModel model, int elemIndex, CharSequence expectedVars) {
 		expectedVars.assertEquals(
-			model.elements.get(elemIndex).variablesDefinedBefore.map[name].join(",")
+			model.statements.elements.get(elemIndex).variablesDefinedBefore.map[name].join(",")
 		)
 	}
 
 	def private void assertVariableDefinedBefore(CharSequence input, boolean expected) {
-		expected.assertEquals(
-			(input.parse.elements.last.expression as VariableRef).
-				isVariableDefinedBefore
-		)
+//		expected.assertEquals(
+//			(input.parse.statements.elements.last.expression as VarOrParamRef).
+//				isVariableDefinedBefore
+//		)
+		assertFalse(true)
 	}
 
 }

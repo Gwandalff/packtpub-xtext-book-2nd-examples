@@ -1,0 +1,11 @@
+behavior expressions;
+
+use org.example.expressions.services.MapService;
+
+open class ExpressionsModel {
+	def expressions::Value interpret() {
+		expressions::Context context := expressions::Context.create();
+		context.values.put('default', expressions::IntValue.create());
+		result := null;
+	}
+}

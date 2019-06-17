@@ -7,19 +7,23 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.validation.Check
 import org.example.expressions.ExpressionsModelUtil
-import org.example.expressions.expressions.And
-import org.example.expressions.expressions.Comparison
-import org.example.expressions.expressions.Equality
-import org.example.expressions.expressions.Expression
-import org.example.expressions.expressions.ExpressionsPackage
-import org.example.expressions.expressions.Minus
-import org.example.expressions.expressions.MulOrDiv
-import org.example.expressions.expressions.Not
-import org.example.expressions.expressions.Or
-import org.example.expressions.expressions.Plus
-import org.example.expressions.expressions.VariableRef
+import org.example.expressions.model.expressions.And
+import org.example.expressions.model.expressions.Comparison
+import org.example.expressions.model.expressions.Equality
+import org.example.expressions.model.expressions.Expression
+import org.example.expressions.model.expressions.ExpressionsPackage
+import org.example.expressions.model.expressions.Minus
+import org.example.expressions.model.expressions.MulOrDiv
+import org.example.expressions.model.expressions.Not
+import org.example.expressions.model.expressions.Or
+import org.example.expressions.model.expressions.Plus
 import org.example.expressions.typing.ExpressionsType
 import org.example.expressions.typing.ExpressionsTypeComputer
+import org.example.expressions.model.expressions.VarOrParamRef
+import org.example.expressions.model.expressions.Variable
+import org.example.expressions.model.expressions.Parameter
+import org.example.expressions.model.expressions.Condition
+import org.example.expressions.model.expressions.Loop
 
 /**
  * This class contains custom validation rules. 
@@ -36,13 +40,41 @@ class ExpressionsValidator extends AbstractExpressionsValidator {
 	@Inject extension ExpressionsTypeComputer
 
 	@Check
-	def void checkForwardReference(VariableRef varRef) {
-		val variable = varRef.getVariable()
+	def void checkForwardReference(VarOrParamRef varRef) {
+//		val variable = varRef.getVariable()
+//		println("la variable est null ? ->" + variable===null)
+//		switch(variable){
+//			Variable: println(variable.name + " = " + variable.expression)
+//			Parameter: println(variable.name + " : " + variable.type)
+//			default: println(variable.name)
+//		}
+//		println(varRef.variablesDefinedBefore)
+//		if (variable !== null && !varRef.variablesDefinedBefore.contains(
+//				variable)) {
+//			error("variable forward reference not allowed: '"
+//					+ variable.name + "'",
+//					ExpressionsPackage::eINSTANCE.varOrParamRef_Variable,
+//					FORWARD_REFERENCE, variable.name)
+//		}
+	val variable = varRef.getVariable()
 		if (!varRef.isVariableDefinedBefore)
 			error("variable forward reference not allowed: '" + variable.name + "'",
-				ExpressionsPackage.eINSTANCE.variableRef_Variable,
-				FORWARD_REFERENCE,
-				variable.name)
+				ExpressionsPackage.eINSTANCE.varOrParamRef_Variable,
+				FORWARD_REFERENCE, variable.name)
+	}
+	
+	@Check def checkType(Condition cond) {
+		if (!cond.expression.typeFor.boolType)
+			error("loop condition need to be a boolean: ",
+				ExpressionsPackage.eINSTANCE.condition_Expression,
+				TYPE_MISMATCH)
+	}
+	
+	@Check def checkType(Loop loop) {
+		if (!loop.expression.typeFor.boolType)
+			error("loop condition need to be a boolean: ",
+				ExpressionsPackage.eINSTANCE.loop_Expression,
+				TYPE_MISMATCH)
 	}
 
 	@Check def checkType(Not not) {

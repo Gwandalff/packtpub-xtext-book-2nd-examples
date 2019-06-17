@@ -3,17 +3,16 @@ package org.example.expressions.performance.tests
 import com.google.inject.Inject
 import org.example.expressions.ExpressionsModelUtil
 import org.example.expressions.ExpressionsRuntimeModule
-import org.example.expressions.expressions.AbstractElement
-import org.example.expressions.expressions.ExpressionsModel
-import org.example.expressions.expressions.Variable
-import org.example.expressions.expressions.VariableRef
-import org.example.expressions.performance.tests.ExpressionsWithoutCacheInjectorProvider.ExpressionsModelUtilWithoutCache
-import org.example.expressions.performance.tests.ExpressionsWithoutCacheInjectorProvider.ExpressionsTypeComputerWithoutCache
+import org.example.expressions.model.expressions.AbstractElement
+import org.example.expressions.model.expressions.ExpressionsModel
+import org.example.expressions.model.expressions.VarOrParam
+import org.example.expressions.model.expressions.VarOrParamRef
 import org.example.expressions.tests.ExpressionsInjectorProvider
 import org.example.expressions.typing.ExpressionsType
 import org.example.expressions.typing.ExpressionsTypeComputer
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
+import org.example.expressions.model.expressions.Variable
 
 /**
  * Injector provider for testing without cache.
@@ -25,12 +24,12 @@ class ExpressionsWithoutCacheInjectorProvider extends ExpressionsInjectorProvide
 	static class ExpressionsModelUtilWithoutCache extends ExpressionsModelUtil {
 
 		override variablesDefinedBefore(AbstractElement containingElement) {
-			val allElements = (containingElement.eContainer as ExpressionsModel).elements
+			val allElements = (containingElement.eContainer as ExpressionsModel).statements.elements
 
 			allElements.subList(
 				0,
 				allElements.indexOf(containingElement)
-			).typeSelect(Variable).toSet
+			).typeSelect(VarOrParam).toSet
 		}
 
 	}
@@ -39,11 +38,13 @@ class ExpressionsWithoutCacheInjectorProvider extends ExpressionsInjectorProvide
 
 		@Inject extension ExpressionsModelUtil
 
-		override dispatch ExpressionsType typeFor(VariableRef varRef) {
+		override dispatch ExpressionsType typeFor(VarOrParamRef varRef) {
 			if (!varRef.isVariableDefinedBefore)
 				return null
 			else {
-				varRef.variable.expression.typeFor
+				val v = varRef.variable
+				if(v instanceof Variable)
+					v.expression.typeFor
 			}
 		}
 	}

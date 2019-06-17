@@ -3,9 +3,9 @@ package org.example.expressions.performance.tests
 import com.google.inject.Inject
 import org.eclipse.xtext.util.IResourceScopeCache
 import org.example.expressions.ExpressionsRuntimeModule
-import org.example.expressions.expressions.Expression
-import org.example.expressions.performance.tests.ExpressionsWithFullyCachedTypeComputerInjectorProvider.ExpressionsFullyCachedTypeComputer
+import org.example.expressions.model.expressions.Expression
 import org.example.expressions.tests.ExpressionsInjectorProvider
+import org.example.expressions.typing.ExpressionsType
 import org.example.expressions.typing.ExpressionsTypeComputer
 
 /**
@@ -19,11 +19,11 @@ class ExpressionsWithFullyCachedTypeComputerInjectorProvider extends Expressions
 
 		@Inject IResourceScopeCache cache
 
-		override typeFor(Expression e) {
-			return cache.get("type" -> e, e.eResource) [
-				super.typeFor(e)
-			]
-		}
+//		override ExpressionsType typeFor(Expression e) {
+//			return cache.get("type" -> e, e.eResource) [
+//				super.typeFor(e)
+//			]
+//		}
 
 	}
 

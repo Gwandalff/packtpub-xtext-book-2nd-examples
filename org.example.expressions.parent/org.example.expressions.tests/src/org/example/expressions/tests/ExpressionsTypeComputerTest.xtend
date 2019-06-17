@@ -7,8 +7,8 @@ import com.google.inject.Inject
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.example.expressions.expressions.Expression
-import org.example.expressions.expressions.ExpressionsModel
+import org.example.expressions.model.expressions.Expression
+import org.example.expressions.model.expressions.ExpressionsModel
 import org.example.expressions.typing.ExpressionsType
 import org.example.expressions.typing.ExpressionsTypeComputer
 import org.junit.Test
@@ -84,8 +84,9 @@ class ExpressionsTypeComputerTest {
 	}
 
 	def assertType(CharSequence input, ExpressionsType expectedType) {
-		input.parse.elements.last.
-			expression.assertType(expectedType)
+//		input.parse.statements.elements.last.
+//			expression.assertType(expectedType)
+		assertFalse(true)
 	}
 
 	def assertType(Expression e, ExpressionsType expectedType) {

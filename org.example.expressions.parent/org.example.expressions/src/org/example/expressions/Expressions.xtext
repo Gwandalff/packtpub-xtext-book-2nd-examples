@@ -1,13 +1,45 @@
 grammar org.example.expressions.Expressions with org.eclipse.xtext.common.Terminals
 
-generate expressions "http://www.example.org/expressions/Expressions"
+import "http://www.example.org/expressions/Expressions"
 
 ExpressionsModel:
-	elements+=AbstractElement*;
+	statements=Statements;
+	
+Statements:
+	{Statements} elements+=AbstractElement*;
 
 AbstractElement:
-	Variable | EvalExpression;
+	Variable | EvalExpression | FunDefinition | Loop | Condition;
 
+Loop:
+	'loop' expression=Expression body=Block
+;
+
+Condition:
+	'if' expression=Expression ifz=Block ('else' elsez=Block)?
+;
+	
+Block:
+	'{' statements=Statements '}'
+;
+	
+FunDefinition:
+	InlineFunction | ComplexFunction;
+	
+InlineFunction: 
+	'let' name=ID '(' (varNames+=Parameter (',' varNames+=Parameter)*)? ')' '=>' expression=Expression
+;
+
+ComplexFunction : 
+	'let' name=ID '(' (varNames+=Parameter (',' varNames+=Parameter)*)? ')' body=Block
+;
+
+VarOrParam:
+	Variable|Parameter;
+
+Parameter:
+	type=("String"|"bool"|"int") name=ID;
+	
 Variable:
 	'var' name=ID '=' expression=Expression;
 
@@ -56,7 +88,15 @@ Primary returns Expression:
 	Atomic;
 
 Atomic returns Expression:
+	FunCall |
 	{IntConstant} value=INT |
 	{StringConstant} value=STRING |
 	{BoolConstant} value=('true' | 'false') |
-	{VariableRef} variable=[Variable];
+	{VarOrParamRef} variable=[VarOrParam];
+
+FunParam:
+	{FunParamExp} expr=Expression |
+	{FunParamCapture } ':' variable=[Variable];
+
+FunCall:
+	function=[FunDefinition] '(' (params+=FunParam (',' params+=FunParam)*)? ')';

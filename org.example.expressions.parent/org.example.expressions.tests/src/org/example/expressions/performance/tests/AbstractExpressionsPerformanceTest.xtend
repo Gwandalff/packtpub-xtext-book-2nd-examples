@@ -3,7 +3,7 @@ package org.example.expressions.performance.tests
 import com.google.inject.Inject
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.example.expressions.expressions.ExpressionsModel
+import org.example.expressions.model.expressions.ExpressionsModel
 
 abstract class AbstractExpressionsPerformanceTest {
 	@Inject extension ParseHelper<ExpressionsModel>

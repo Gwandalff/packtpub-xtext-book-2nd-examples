@@ -38,6 +38,7 @@ Workflow {
 			validator = {
 				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
 			}
+			referencedResource = "platform:/resource/org.example.expressions.model/model/Expressions.genmodel"
 		}
 	}
 }

@@ -8,10 +8,13 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.AbstractGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess2
 import org.eclipse.xtext.generator.IGeneratorContext
-import org.example.expressions.expressions.ExpressionsModel
+import org.example.expressions.model.expressions.ExpressionsModel
 import org.example.expressions.interpreter.ExpressionsInterpreter
 
 import static extension org.eclipse.xtext.nodemodel.util.NodeModelUtils.*
+import java.util.HashMap
+import org.example.expressions.model.expressions.Expression
+import org.example.expressions.model.expressions.AbstractElement
 
 /**
  * Generates code from your model files on save.
@@ -31,8 +34,9 @@ class ExpressionsGenerator extends AbstractGenerator {
 	}
 
 	def interpretExpressions(ExpressionsModel model) {
-		model.elements.map [
-			'''«getNode.getTokenText» ~> «interpret»'''
+		val context = new HashMap<String, Object>()
+		model.statements.elements.map [AbstractElement e|
+			'''«getNode(e).getTokenText» ~> «interpret(e, context)»'''
 		].join("\n")
 	}
 }

@@ -8,7 +8,7 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.example.expressions.expressions.ExpressionsModel
+import org.example.expressions.model.expressions.ExpressionsModel
 import org.example.expressions.interpreter.ExpressionsInterpreter
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -78,13 +78,104 @@ class ExpressionsInterpreterTest {
 	@Test def void varRef() { "var i = 1 var j = i + 2 eval j+1".assertInterpret(4) }
 
 	@Test def void varSameVarRef() { "var i = 1 eval i+i".assertInterpret(2) }
+	
+	@Test def void function() { "let inc(int i) => i+1 eval inc(3)".assertInterpret(4) }
+	
+	@Test def void functionWithVar() { "let inc(int i) => i+1 var j = 3*4 eval inc(j)".assertInterpret(13) }
+	
+	@Test def void functionSameParamNameAsVar() { "let inc(int i) => i+1 var i = 42 eval inc(i)".assertInterpret(43) }
+	
+	@Test def void functionComplex() { 
+		'''
+		let isRectangle(int a, int b, int c){ 
+			var aLong = a*a == b*b + c*c 
+			var bLong = b*b == a*a + c*c 
+			var cLong = c*c == b*b + a*a 
+			eval aLong||bLong||cLong
+		} 
+		eval isRectangle(3,4,5)
+		'''
+		.assertInterpret(true) 
+	}
+	
+	@Test def void functionWithCapture() { 
+	'''
+	let addNminus(int a, int b, int minus) { 
+		var minus = a - b 
+		eval a + b
+	} 
+	var sideEffect = 0
+	eval addNminus(4,2,:sideEffect)
+	eval sideEffect
+	
+	'''.assertInterpret(2) 
+	}
+	
+	@Test def void functionWithCaptureRecursive() { 
+	'''
+	let factN(int n, int fact) { 
+		if n > 0 {
+			eval factN(n-1,:fact)
+			var fact = fact * n
+		}
+		eval fact
+	} 
+	var sideEffect = 1
+	eval factN(5,:sideEffect)
+	eval sideEffect
+	
+	'''.assertInterpret(120) 
+	}
+	
+	@Test def void ifElseStatment() { 
+	'''
+	var a = 0
+	if true {
+		var a = 144
+	} else {
+		var a = 1
+	}
+	
+	if false {
+		var a = a / 12
+	} else {
+		var a = a - 102
+	}
+	eval a
+	'''.assertInterpret(42) 
+	}
+	
+	@Test def void ifOnlyStatment() { 
+	'''
+	var a = 0
+	if true {
+		var a = 42
+	}
+	
+	if false {
+		var a = a / 12
+	}
+	eval a
+	'''.assertInterpret(42) 
+	}
+	
+	@Test def void loopStatment() { 
+	'''
+	var count = 0
+	loop count < 6 {
+		var count = count + 2
+	}
+	eval count
+	'''.assertInterpret(6) 
+	}
 
 	@Test def void complex() { "eval ((5 * 3)+1) / (7 + 1)".assertInterpret(2) }
 
 	def assertInterpret(CharSequence input, Object expected) {
 		input.parse => [
 			assertNoErrors
-			expected.assertEquals(elements.last.expression.interpret)
+			val res = interpret(newHashMap)
+			expected.assertEquals(res)
 		]
 	}
 

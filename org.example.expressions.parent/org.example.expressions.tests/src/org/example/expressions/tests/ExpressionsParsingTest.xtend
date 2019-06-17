@@ -7,20 +7,20 @@ import com.google.inject.Inject
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.example.expressions.expressions.And
-import org.example.expressions.expressions.BoolConstant
-import org.example.expressions.expressions.Comparison
-import org.example.expressions.expressions.Equality
-import org.example.expressions.expressions.Expression
-import org.example.expressions.expressions.ExpressionsModel
-import org.example.expressions.expressions.IntConstant
-import org.example.expressions.expressions.Minus
-import org.example.expressions.expressions.MulOrDiv
-import org.example.expressions.expressions.Not
-import org.example.expressions.expressions.Or
-import org.example.expressions.expressions.Plus
-import org.example.expressions.expressions.StringConstant
-import org.example.expressions.expressions.VariableRef
+import org.example.expressions.model.expressions.And
+import org.example.expressions.model.expressions.BoolConstant
+import org.example.expressions.model.expressions.Comparison
+import org.example.expressions.model.expressions.Equality
+import org.example.expressions.model.expressions.Expression
+import org.example.expressions.model.expressions.ExpressionsModel
+import org.example.expressions.model.expressions.IntConstant
+import org.example.expressions.model.expressions.Minus
+import org.example.expressions.model.expressions.MulOrDiv
+import org.example.expressions.model.expressions.Not
+import org.example.expressions.model.expressions.Or
+import org.example.expressions.model.expressions.Plus
+import org.example.expressions.model.expressions.StringConstant
+import org.example.expressions.model.expressions.VarOrParamRef
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -53,8 +53,9 @@ class ExpressionsParsingTest {
 			var i = 10
 			eval i
 		'''.parse => [
-			(elements.last.expression as VariableRef).variable.
-				assertSame(elements.head)
+//			(.statements.elements.last.expression as VarOrParamRef).variable.
+//				assertSame(elements.head)
+		assertFalse(true)
 		]
 	}
 
@@ -63,8 +64,9 @@ class ExpressionsParsingTest {
 	}
 
 	@Test def void testParenthesis() {
-		10.assertEquals(
-			("eval (10)".parse.elements.head.expression as IntConstant).value)
+//		10.assertEquals(
+//			("eval (10)".parse.statements.elements.head.expression as IntConstant).value)
+		assertFalse(true)
 	}
 
 	@Test def void testPlusWithParenthesis() {
@@ -113,9 +115,10 @@ class ExpressionsParsingTest {
 
 	def private assertRepr(CharSequence input, CharSequence expected) {
 		("eval " + input).parse => [
-			expected.assertEquals(
-				elements.last.expression.stringRepr
-			)
+//			expected.assertEquals(
+//				elements.last.expression.stringRepr
+//			)
+			assertFalse(true)
 		]
 	}
 
@@ -132,7 +135,7 @@ class ExpressionsParsingTest {
 			IntConstant: '''«e.value»'''
 			StringConstant: '''«e.value»'''
 			BoolConstant: '''«e.value»'''
-			VariableRef: '''«e.variable.name»'''
+			VarOrParamRef: '''«e.variable.name»'''
 		}.toString
 	}
 

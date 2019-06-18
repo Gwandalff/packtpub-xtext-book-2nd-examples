@@ -7,5 +7,209 @@ open class ExpressionsModel {
 		expressions::Context context := expressions::Context.create();
 		context.values.put('default', expressions::IntValue.create());
 		result := null;
+		for(element in self.statements.elements){
+			result := element.interpret(context);
+		}
+	}
+}
+
+open class AbstractElement {
+	def expressions::Value interpret(expressions::Context context) {
+		if(self.oclIsKindOf(expressions::Variable)){
+			expressions::Value val := self.expression.interpret(context);
+			context.put(self.name, val);
+			result := val;
+		}
+		if(self.oclIsKindOf(expressions::FunDefinition)){ 
+			result := null;
+		}
+		if(self.oclIsKindOf(expressions::EvalExpression)){
+			result := self.expression.interpret(context);
+		}
+		if(self.oclIsKindOf(expressions::Condition)){
+			expressions::BoolValue cond = self.expression.interpret(context);
+			if(cond.value){
+				self.ifz.interpret(context);
+			} else {
+				if(self.elsez.oclIsKindOf(expressions::Block)){
+					self.elsez.interpret(context);
+				}
+			}
+			result := null;
+		}
+		if(self.oclIsKindOf(expressions::Loop)){
+			while(self.expression.interpret(context).oclAsType(expressions::BoolValue).value){
+				self.body.interpret(context);
+			}
+			result := null;
+		}
+	}
+}
+
+open class Block {
+	def expressions::Value interpret(expressions::Context context) {
+		for(element in self.statements.elements){
+			result := element.interpret(context);
+		}
+	}
+}
+
+open class FunParamExp {
+	def expressions::Value interpret(expressions::Context context) {
+		result := self.expr.interpret(context);
+	}
+}
+
+open class FunParamCapture {
+	def expressions::Value interpret(expressions::Context context) {
+		result := context.values.get(self.variable.name);
+	}
+}
+
+open class FunCall {
+	def expressions::Value interpret(expressions::Context context) {
+		expressions::Context funContext := expressions::Context.create();
+		
+		// create the new context with params
+		for(i in [0 .. self.function.varNames.length]){
+			funContext.values.put(self.function.varNames.get(i), self.params.get(i).interpret(context));
+		}
+		
+		//interpret
+		if(self.function.oclIsKindOf(expressions::InlineFunction)){
+			result := self.function.expression.interpret(funContext);
+		}
+		if(self.function.oclIsKindOf(expressions::ComplexFunction)){
+			result := self.function.body.interpret(funContext);
+		}
+		
+		// update captured variables in the caller context
+		for(i in [0 .. self.params.length]){
+			expressions::FunParam param = self.params.get(i);
+			if(param.oclIsKindOf(expressions::FunParamCapture)){
+				context.values.put(param.variable.name, funContext.values.get(self.function.varNames.get(i).name));	
+			}
+		}
+	}
+}
+
+open class VarOrParamRef {
+	def expressions::Value interpret(expressions::Context context) {
+		result := context.values.get(self.variable.name);
+	}
+}
+
+open class Equality {
+	def expressions::Value interpret(expressions::Context context) {
+		expressions::BoolValue ret := expressions::BoolValue.create();
+		if (self.op = '==') {
+			ret.value := self.left. interpret(context) == self.right.interpret(context);
+		} else {
+			ret.value := self.left. interpret(context) != self.right.interpret(context);
+		}
+		result := ret;
+	}
+}
+
+open class Comparison {
+	def expressions::Value interpret(expressions::Context context) {
+		expressions::BoolValue ret := expressions::BoolValue.create();
+		if (self.left.typeFor.isStringType) {
+			String left  := self.left. interpret(context);
+			String right := self.right.interpret(context);
+			
+			if(self.op = '<' ){ ret.value := left <  right;}
+			if(self.op = '>' ){ ret.value := left >  right;}
+			if(self.op = '>='){ ret.value := left >= right;}
+			if(self.op = '<='){ ret.value := left <= right;}
+			
+		} else {
+			int right := self.right.interpret(context);
+			int left  := self.left. interpret(context);
+			
+			if(self.op = '<' ){ ret.value := left <  right;}
+			if(self.op = '>' ){ ret.value := left >  right;}
+			if(self.op = '>='){ ret.value := left >= right;}
+			if(self.op = '<='){ ret.value := left <= right;}
+		}
+		result := ret;
+	}
+}
+
+open class And {
+	def expressions::Value interpret(expressions::Context context) {
+		expressions::BoolValue ret := expressions::BoolValue.create();
+		ret.value := self.left.interpret(context) && self.interpret(context);
+		result := ret;
+	}
+}
+
+open class Or {
+	def expressions::Value interpret(expressions::Context context) {
+		expressions::BoolValue ret := expressions::BoolValue.create();
+		ret.value := self.left.interpret(context) || self.interpret(context);
+		result := ret;
+	}
+}
+
+open class Not {
+	def expressions::Value interpret(expressions::Context context) {
+		expressions::BoolValue ret := expressions::BoolValue.create();
+		ret.value := !self.expression.interpret(context);
+		result := ret;
+	}
+}
+
+open class MulOrDiv {
+	def expressions::Value interpret(expressions::Context context) {
+		expressions::IntValue ret := expressions::IntValue.create();
+		expressions::IntValue left = e.left.interpret(context);
+		expressions::IntValue right = e.right.interpret(context);
+		if (self.op == '*'){
+			ret.value := left.value * right.value;
+		} else {
+			ret.value := left.value / right.value;
+		}
+		result := ret;
+	}
+}
+
+open class Minus {
+	def expressions::Value interpret(expressions::Context context) {
+		expressions::IntValue ret := expressions::IntValue.create();
+		ret.value := self.left.interpret(context).value - self.right.interpret(context).value;
+		result := ret;
+	}
+}
+
+open class Plus {
+	def expressions::Value interpret(expressions::Context context) {
+		expressions::IntValue ret := expressions::IntValue.create();
+		ret.value := self.left.interpret(context).value + self.right.interpret(context).value;
+		result := ret;
+	}
+}
+
+open class IntConstant {
+	def expressions::Value interpret(expressions::Context context) {
+		expressions::IntValue ret := expressions::IntValue.create();
+		ret.value := self.value;
+		result := ret;
+	}
+}
+
+open class BoolConstant {
+	def expressions::Value interpret(expressions::Context context) {
+		expressions::BoolValue ret := expressions::BoolValue.create();
+		ret.value := self.value.oclAsType(Boolean);
+		result := ret;
+	}
+}
+
+open class StringConstant {
+	def expressions::Value interpret(expressions::Context context) {
+		expressions::StringValue ret := expressions::StringValue.create();
+		ret.value := self.value;
+		result := ret;
 	}
 }

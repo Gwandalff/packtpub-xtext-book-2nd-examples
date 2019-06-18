@@ -2,17 +2,20 @@ package expressions.interpreter.expressions.impl;
 
 import expressions.interpreter.expressions.Expression;
 import expressions.interpreter.expressions.ExpressionsPackage;
+import expressions.interpreter.expressions.Value;
 import expressions.interpreter.expressions.VarOrParam;
 import expressions.interpreter.expressions.Variable;
 import java.lang.Class;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
+import org.eclipse.acceleo.query.runtime.impl.Nothing;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.example.expressions.services.MapService;
 
 public class VariableImpl extends AbstractElementImpl implements Variable {
 	protected static final String NAME_EDEFAULT = null;
@@ -150,5 +153,12 @@ public class VariableImpl extends AbstractElementImpl implements Variable {
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	public Value interpret() {
+		Value result;
+		result = (Value) (((Expression) (this.getExpression())).interpret((Nothing) (context))) ;
+		MapService.put((context.getValues()), (String) (this.name), (Value) (result));
+		return result;
 	}
 }

@@ -1,7 +1,11 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.Context;
+import expressions.interpreter.expressions.ExpressionsFactory;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.StringConstant;
+import expressions.interpreter.expressions.StringValue;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
@@ -70,5 +74,13 @@ public class StringConstantImpl extends ExpressionImpl implements StringConstant
 				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret(Context context) {
+		Value result;
+		StringValue ret = ((StringValue) (ExpressionsFactory.eINSTANCE.createStringValue()));
+		ret.setValue(this.value);
+		result = (Value) (ret) ;
+		return result;
 	}
 }

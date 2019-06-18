@@ -9,4 +9,6 @@ public interface FunCall extends EObject, Expression {
 	void setFunction(FunDefinition value);
 
 	EList<FunParam> getParams();
+
+	Value interpret(Context context);
 }

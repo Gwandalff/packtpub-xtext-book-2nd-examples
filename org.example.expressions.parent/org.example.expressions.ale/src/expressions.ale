@@ -13,33 +13,79 @@ open class ExpressionsModel {
 	}
 }
 
+open class Variable {
+	def expressions::Value interpret() {
+		result := self.expression.interpret(context);
+		context.values.put(self.name, result);
+	}
+}
+
+open class FunDefinition {
+	def expressions::Value interpret() {
+		result := null;
+	}
+}
+
+open class EvalExpression {
+	def expressions::Value interpret() {
+		result := self.expression.interpret(context);
+	}
+}
+
+open class Condition {
+	def expressions::Value interpret() {
+		expressions::BoolValue cond := self.expression.interpret(context);
+		if(cond.isValue()){
+			self.ifz.interpret(context);
+		} else {
+			if(self.elsez.oclIsKindOf(expressions::Block)){
+				self.elsez.interpret(context);
+			}
+		}
+		result := null;
+	}
+}
+
+open class Loop {
+	def expressions::Value interpret() {
+		while(self.expression.interpret(context).oclAsType(expressions::BoolValue).isValue()){
+			self.body.interpret(context);
+		}
+		result := null;
+	}
+}
+
 open class AbstractElement {
 	def expressions::Value interpret(expressions::Context context) {
+		result := null;
 		if(self.oclIsKindOf(expressions::Variable)){
-			expressions::Value val := self.expression.interpret(context);
-			context.put(self.name, val);
-			result := val;
+			expressions::Variable var := self.oclAsType(expressions::Variable);
+			result := var.expression.interpret(context);
+			context.values.put(var.name, result);
 		}
 		if(self.oclIsKindOf(expressions::FunDefinition)){ 
 			result := null;
 		}
 		if(self.oclIsKindOf(expressions::EvalExpression)){
-			result := self.expression.interpret(context);
+			expressions::EvalExpression eval := self.oclAsType(expressions::EvalExpression);
+			result := eval.expression.interpret(context);
 		}
 		if(self.oclIsKindOf(expressions::Condition)){
-			expressions::BoolValue cond = self.expression.interpret(context);
-			if(cond.value){
-				self.ifz.interpret(context);
+			expressions::Condition condition := self.oclAsType(expressions::Condition);
+			expressions::BoolValue cond := condition.expression.interpret(context);
+			if(cond.isValue()){
+				condition.ifz.interpret(context);
 			} else {
-				if(self.elsez.oclIsKindOf(expressions::Block)){
-					self.elsez.interpret(context);
+				if(condition.elsez.oclIsKindOf(expressions::Block)){
+					condition.elsez.interpret(context);
 				}
 			}
 			result := null;
 		}
 		if(self.oclIsKindOf(expressions::Loop)){
-			while(self.expression.interpret(context).oclAsType(expressions::BoolValue).value){
-				self.body.interpret(context);
+			expressions::Loop loop := self.oclAsType(expressions::Loop);
+			while(loop.expression.interpret(context).oclAsType(expressions::BoolValue).isValue()){
+				loop.body.interpret(context);
 			}
 			result := null;
 		}
@@ -48,6 +94,7 @@ open class AbstractElement {
 
 open class Block {
 	def expressions::Value interpret(expressions::Context context) {
+		result := null;
 		for(element in self.statements.elements){
 			result := element.interpret(context);
 		}
@@ -71,24 +118,31 @@ open class FunCall {
 		expressions::Context funContext := expressions::Context.create();
 		
 		// create the new context with params
-		for(i in [0 .. self.function.varNames.length]){
-			funContext.values.put(self.function.varNames.get(i), self.params.get(i).interpret(context));
+		int i := 0;
+		while(i < self.function.varNames.size()){
+			funContext.values.put(self.function.varNames.get(i).name, self.params.get(i).interpret(context));
+			i := i + 1;
 		}
 		
 		//interpret
 		if(self.function.oclIsKindOf(expressions::InlineFunction)){
-			result := self.function.expression.interpret(funContext);
+			expressions::InlineFunction f = self.function;
+			result := f.expression.interpret(funContext);
 		}
 		if(self.function.oclIsKindOf(expressions::ComplexFunction)){
-			result := self.function.body.interpret(funContext);
+			expressions::ComplexFunction f = self.function;
+			result := f.body.interpret(funContext);
 		}
 		
 		// update captured variables in the caller context
-		for(i in [0 .. self.params.length]){
-			expressions::FunParam param = self.params.get(i);
+		i := 0;
+		while(i < self.params.size()){
+			expressions::FunParam param := self.params.get(i);
 			if(param.oclIsKindOf(expressions::FunParamCapture)){
-				context.values.put(param.variable.name, funContext.values.get(self.function.varNames.get(i).name));	
+				expressions::FunParamCapture capture := param.oclAsType(expressions::FunParamCapture);
+				context.values.put(capture.variable.name, funContext.values.get(self.function.varNames.get(i).name));	
 			}
+			i := i + 1;
 		}
 	}
 }
@@ -114,23 +168,23 @@ open class Equality {
 open class Comparison {
 	def expressions::Value interpret(expressions::Context context) {
 		expressions::BoolValue ret := expressions::BoolValue.create();
-		if (self.left.typeFor.isStringType) {
-			String left  := self.left. interpret(context);
-			String right := self.right.interpret(context);
+		if (false /*self.left.typeFor.isStringType*/) {
+			String left  := self.left. interpret(context).oclAsType(expressions::StringValue).value;
+			String right := self.right.interpret(context).oclAsType(expressions::StringValue).value;
 			
-			if(self.op = '<' ){ ret.value := left <  right;}
-			if(self.op = '>' ){ ret.value := left >  right;}
-			if(self.op = '>='){ ret.value := left >= right;}
-			if(self.op = '<='){ ret.value := left <= right;}
+			if(self.op == '<' ){ ret.value := left <  right;}
+			if(self.op == '>' ){ ret.value := left >  right;}
+			if(self.op == '>='){ ret.value := left >= right;}
+			if(self.op == '<='){ ret.value := left <= right;}
 			
 		} else {
-			int right := self.right.interpret(context);
-			int left  := self.left. interpret(context);
+			int right := self.right.interpret(context).oclAsType(expressions::IntValue).value;
+			int left  := self.left. interpret(context).oclAsType(expressions::IntValue).value;
 			
-			if(self.op = '<' ){ ret.value := left <  right;}
-			if(self.op = '>' ){ ret.value := left >  right;}
-			if(self.op = '>='){ ret.value := left >= right;}
-			if(self.op = '<='){ ret.value := left <= right;}
+			if(self.op == '<' ){ ret.value := left <  right;}
+			if(self.op == '>' ){ ret.value := left >  right;}
+			if(self.op == '>='){ ret.value := left >= right;}
+			if(self.op == '<='){ ret.value := left <= right;}
 		}
 		result := ret;
 	}
@@ -139,7 +193,9 @@ open class Comparison {
 open class And {
 	def expressions::Value interpret(expressions::Context context) {
 		expressions::BoolValue ret := expressions::BoolValue.create();
-		ret.value := self.left.interpret(context) && self.interpret(context);
+		expressions::BoolValue l := self.left.interpret(context);
+		expressions::BoolValue r := self.right.interpret(context);
+		ret.value := l.isValue() and r.isValue();
 		result := ret;
 	}
 }
@@ -147,7 +203,9 @@ open class And {
 open class Or {
 	def expressions::Value interpret(expressions::Context context) {
 		expressions::BoolValue ret := expressions::BoolValue.create();
-		ret.value := self.left.interpret(context) || self.interpret(context);
+		expressions::BoolValue l := self.left.interpret(context);
+		expressions::BoolValue r := self.right.interpret(context);
+		ret.value := l.isValue() or r.isValue();
 		result := ret;
 	}
 }
@@ -155,16 +213,16 @@ open class Or {
 open class Not {
 	def expressions::Value interpret(expressions::Context context) {
 		expressions::BoolValue ret := expressions::BoolValue.create();
-		ret.value := !self.expression.interpret(context);
+		ret.value := not self.expression.interpret(context).oclAsType(expressions::BoolValue).isValue();
 		result := ret;
 	}
 }
 
 open class MulOrDiv {
 	def expressions::Value interpret(expressions::Context context) {
-		expressions::IntValue ret := expressions::IntValue.create();
-		expressions::IntValue left = e.left.interpret(context);
-		expressions::IntValue right = e.right.interpret(context);
+		expressions::IntValue ret   := expressions::IntValue.create();
+		expressions::IntValue left  := self.left.interpret(context);
+		expressions::IntValue right := self.right.interpret(context);
 		if (self.op == '*'){
 			ret.value := left.value * right.value;
 		} else {
@@ -177,7 +235,9 @@ open class MulOrDiv {
 open class Minus {
 	def expressions::Value interpret(expressions::Context context) {
 		expressions::IntValue ret := expressions::IntValue.create();
-		ret.value := self.left.interpret(context).value - self.right.interpret(context).value;
+		expressions::IntValue left  := self.left.interpret(context);
+		expressions::IntValue right := self.right.interpret(context);
+		ret.value := left.value - right.value;
 		result := ret;
 	}
 }
@@ -185,7 +245,9 @@ open class Minus {
 open class Plus {
 	def expressions::Value interpret(expressions::Context context) {
 		expressions::IntValue ret := expressions::IntValue.create();
-		ret.value := self.left.interpret(context).value + self.right.interpret(context).value;
+		expressions::IntValue left  := self.left.interpret(context);
+		expressions::IntValue right := self.right.interpret(context);
+		ret.value := left.value + right.value;
 		result := ret;
 	}
 }
@@ -201,7 +263,7 @@ open class IntConstant {
 open class BoolConstant {
 	def expressions::Value interpret(expressions::Context context) {
 		expressions::BoolValue ret := expressions::BoolValue.create();
-		ret.value := self.value.oclAsType(Boolean);
+		ret.value := self.value == 'true';
 		result := ret;
 	}
 }
@@ -211,5 +273,11 @@ open class StringConstant {
 		expressions::StringValue ret := expressions::StringValue.create();
 		ret.value := self.value;
 		result := ret;
+	}
+}
+
+open class Expression {
+	def expressions::Value interpret(expressions::Context context) {
+		result := null;
 	}
 }

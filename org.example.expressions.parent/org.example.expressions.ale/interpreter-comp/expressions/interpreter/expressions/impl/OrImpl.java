@@ -1,8 +1,12 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.BoolValue;
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.Expression;
+import expressions.interpreter.expressions.ExpressionsFactory;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.Or;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
 import org.eclipse.emf.common.notify.Notification;
@@ -145,5 +149,15 @@ public class OrImpl extends ExpressionImpl implements Or {
 				return right != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret(Context context) {
+		Value result;
+		BoolValue ret = ((BoolValue) (ExpressionsFactory.eINSTANCE.createBoolValue()));
+		BoolValue l = ((BoolValue) (this.getLeft().interpret((Context) (context))));
+		BoolValue r = ((BoolValue) (this.getRight().interpret((Context) (context))));
+		ret.setValue(((l.isValue()) || (r.isValue())));
+		result = (Value) (ret) ;
+		return result;
 	}
 }

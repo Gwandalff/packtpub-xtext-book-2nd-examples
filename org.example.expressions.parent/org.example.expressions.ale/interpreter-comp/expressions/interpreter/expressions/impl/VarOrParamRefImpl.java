@@ -1,10 +1,13 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.ExpressionsPackage;
+import expressions.interpreter.expressions.Value;
 import expressions.interpreter.expressions.VarOrParam;
 import expressions.interpreter.expressions.VarOrParamRef;
 import java.lang.Object;
 import java.lang.Override;
+import java.lang.String;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -83,5 +86,11 @@ public class VarOrParamRefImpl extends ExpressionImpl implements VarOrParamRef {
 				return variable != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret(Context context) {
+		Value result;
+		result = (Value) (context.getValues().get((String) (this.getVariable().getName()))) ;
+		return result;
 	}
 }

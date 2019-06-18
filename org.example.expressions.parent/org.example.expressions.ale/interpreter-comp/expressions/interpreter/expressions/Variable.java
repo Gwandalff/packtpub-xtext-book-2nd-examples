@@ -6,4 +6,6 @@ public interface Variable extends EObject, AbstractElement, VarOrParam {
 	Expression getExpression();
 
 	void setExpression(Expression value);
+
+	Value interpret();
 }

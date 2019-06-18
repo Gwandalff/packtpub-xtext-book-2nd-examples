@@ -14,4 +14,6 @@ public interface Condition extends EObject, AbstractElement {
 	Block getElsez();
 
 	void setElsez(Block value);
+
+	Value interpret();
 }

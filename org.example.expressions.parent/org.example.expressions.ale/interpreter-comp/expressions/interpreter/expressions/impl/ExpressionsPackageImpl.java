@@ -469,12 +469,24 @@ public class ExpressionsPackageImpl extends EPackageImpl implements ExpressionsP
 		return intValueEClass;
 	}
 
+	public EAttribute getIntValue_Value() {
+		return (EAttribute) intValueEClass.getEStructuralFeatures().get(0);
+	}
+
 	public EClass getBoolValue() {
 		return boolValueEClass;
 	}
 
+	public EAttribute getBoolValue_Value() {
+		return (EAttribute) boolValueEClass.getEStructuralFeatures().get(0);
+	}
+
 	public EClass getStringValue() {
 		return stringValueEClass;
+	}
+
+	public EAttribute getStringValue_Value() {
+		return (EAttribute) stringValueEClass.getEStructuralFeatures().get(0);
 	}
 
 	public ExpressionsFactory getExpressionsFactory() {
@@ -599,10 +611,13 @@ public class ExpressionsPackageImpl extends EPackageImpl implements ExpressionsP
 		valueEClass = createEClass(VALUE);
 
 		intValueEClass = createEClass(INT_VALUE);
+		createEAttribute(intValueEClass, INT_VALUE__VALUE);
 
 		boolValueEClass = createEClass(BOOL_VALUE);
+		createEAttribute(boolValueEClass, BOOL_VALUE__VALUE);
 
 		stringValueEClass = createEClass(STRING_VALUE);
+		createEAttribute(stringValueEClass, STRING_VALUE__VALUE);
 	}
 
 	public void initializePackageContents() {
@@ -761,10 +776,13 @@ public class ExpressionsPackageImpl extends EPackageImpl implements ExpressionsP
 		initEClass(valueEClass, Value.class, "Value", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(intValueEClass, IntValue.class, "IntValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getIntValue_Value(), ecorePackage.getEInt(), "value", null, 0, 1, IntValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(boolValueEClass, BoolValue.class, "BoolValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getBoolValue_Value(), ecorePackage.getEBoolean(), "value", null, 0, 1, BoolValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(stringValueEClass, StringValue.class, "StringValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStringValue_Value(), ecorePackage.getEString(), "value", null, 0, 1, StringValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

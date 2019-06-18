@@ -3,8 +3,10 @@ package expressions.interpreter.expressions.impl;
 import expressions.interpreter.expressions.EvalExpression;
 import expressions.interpreter.expressions.Expression;
 import expressions.interpreter.expressions.ExpressionsPackage;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
+import org.eclipse.acceleo.query.runtime.impl.Nothing;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
@@ -100,5 +102,11 @@ public class EvalExpressionImpl extends AbstractElementImpl implements EvalExpre
 				return expression != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret() {
+		Value result;
+		result = (Value) (((Expression) (this.getExpression())).interpret((Nothing) (context))) ;
+		return result;
 	}
 }

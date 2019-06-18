@@ -1,7 +1,11 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.Context;
+import expressions.interpreter.expressions.ExpressionsFactory;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.IntConstant;
+import expressions.interpreter.expressions.IntValue;
+import expressions.interpreter.expressions.Value;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
@@ -70,5 +74,13 @@ public class IntConstantImpl extends ExpressionImpl implements IntConstant {
 				return value != VALUE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret(Context context) {
+		Value result;
+		IntValue ret = ((IntValue) (ExpressionsFactory.eINSTANCE.createIntValue()));
+		ret.setValue(this.value);
+		result = (Value) (ret) ;
+		return result;
 	}
 }

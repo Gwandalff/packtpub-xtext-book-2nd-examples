@@ -1,8 +1,12 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.BoolValue;
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.Expression;
+import expressions.interpreter.expressions.ExpressionsFactory;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.Not;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
 import org.eclipse.emf.common.notify.Notification;
@@ -100,5 +104,13 @@ public class NotImpl extends ExpressionImpl implements Not {
 				return expression != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret(Context context) {
+		Value result;
+		BoolValue ret = ((BoolValue) (ExpressionsFactory.eINSTANCE.createBoolValue()));
+		ret.setValue(!(((BoolValue) (((Expression) (this.getExpression())).interpret((Context) (context)))).isValue()));
+		result = (Value) (ret) ;
+		return result;
 	}
 }

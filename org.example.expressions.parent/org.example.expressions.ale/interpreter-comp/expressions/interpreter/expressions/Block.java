@@ -6,4 +6,6 @@ public interface Block extends EObject {
 	Statements getStatements();
 
 	void setStatements(Statements value);
+
+	Value interpret(Context context);
 }

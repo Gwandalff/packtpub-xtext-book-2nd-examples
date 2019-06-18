@@ -1,8 +1,12 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.Expression;
+import expressions.interpreter.expressions.ExpressionsFactory;
 import expressions.interpreter.expressions.ExpressionsPackage;
+import expressions.interpreter.expressions.IntValue;
 import expressions.interpreter.expressions.MulOrDiv;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
@@ -11,6 +15,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecoretools.ale.compiler.lib.EqualService;
 
 public class MulOrDivImpl extends ExpressionImpl implements MulOrDiv {
 	protected static final String OP_EDEFAULT = null;
@@ -171,5 +176,20 @@ public class MulOrDivImpl extends ExpressionImpl implements MulOrDiv {
 				return right != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret(Context context) {
+		Value result;
+		IntValue ret = ((IntValue) (ExpressionsFactory.eINSTANCE.createIntValue()));
+		IntValue left = ((IntValue) (((Expression) (this.getLeft())).interpret((Context) (context))));
+		IntValue right = ((IntValue) (((Expression) (this.getRight())).interpret((Context) (context))));
+		if (EqualService.equals((this.op), ("*"))) {
+			ret.setValue((left.getValue()) * (right.getValue()));
+		}
+		else {
+			ret.setValue((left.getValue()) / (right.getValue()));
+		}
+		result = (Value) (ret) ;
+		return result;
 	}
 }

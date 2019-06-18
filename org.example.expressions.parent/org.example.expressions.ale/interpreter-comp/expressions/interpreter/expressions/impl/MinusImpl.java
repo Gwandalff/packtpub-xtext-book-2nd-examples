@@ -1,8 +1,12 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.Expression;
+import expressions.interpreter.expressions.ExpressionsFactory;
 import expressions.interpreter.expressions.ExpressionsPackage;
+import expressions.interpreter.expressions.IntValue;
 import expressions.interpreter.expressions.Minus;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
 import org.eclipse.emf.common.notify.Notification;
@@ -145,5 +149,15 @@ public class MinusImpl extends ExpressionImpl implements Minus {
 				return right != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret(Context context) {
+		Value result;
+		IntValue ret = ((IntValue) (ExpressionsFactory.eINSTANCE.createIntValue()));
+		IntValue left = ((IntValue) (((Expression) (this.getLeft())).interpret((Context) (context))));
+		IntValue right = ((IntValue) (((Expression) (this.getRight())).interpret((Context) (context))));
+		ret.setValue((left.getValue()) - (right.getValue()));
+		result = (Value) (ret) ;
+		return result;
 	}
 }

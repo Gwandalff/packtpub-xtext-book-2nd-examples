@@ -10,4 +10,6 @@ public interface Loop extends EObject, AbstractElement {
 	Block getBody();
 
 	void setBody(Block value);
+
+	Value interpret();
 }

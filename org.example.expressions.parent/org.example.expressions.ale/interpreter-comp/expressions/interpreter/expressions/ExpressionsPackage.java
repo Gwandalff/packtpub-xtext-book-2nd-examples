@@ -318,19 +318,25 @@ public interface ExpressionsPackage extends EPackage {
 
 	int INT_VALUE = 33;
 
-	int INT_VALUE_FEATURE_COUNT = VALUE_FEATURE_COUNT + 0;
+	int INT_VALUE__VALUE = 0;
+
+	int INT_VALUE_FEATURE_COUNT = VALUE_FEATURE_COUNT + 1;
 
 	int INT_VALUE_OPERATION_COUNT = VALUE_OPERATION_COUNT + 0;
 
 	int BOOL_VALUE = 34;
 
-	int BOOL_VALUE_FEATURE_COUNT = VALUE_FEATURE_COUNT + 0;
+	int BOOL_VALUE__VALUE = 0;
+
+	int BOOL_VALUE_FEATURE_COUNT = VALUE_FEATURE_COUNT + 1;
 
 	int BOOL_VALUE_OPERATION_COUNT = VALUE_OPERATION_COUNT + 0;
 
 	int STRING_VALUE = 35;
 
-	int STRING_VALUE_FEATURE_COUNT = VALUE_FEATURE_COUNT + 0;
+	int STRING_VALUE__VALUE = 0;
+
+	int STRING_VALUE_FEATURE_COUNT = VALUE_FEATURE_COUNT + 1;
 
 	int STRING_VALUE_OPERATION_COUNT = VALUE_OPERATION_COUNT + 0;
 
@@ -492,9 +498,15 @@ public interface ExpressionsPackage extends EPackage {
 
 	EClass getIntValue();
 
+	EAttribute getIntValue_Value();
+
 	EClass getBoolValue();
 
+	EAttribute getBoolValue_Value();
+
 	EClass getStringValue();
+
+	EAttribute getStringValue_Value();
 
 	ExpressionsFactory getExpressionsFactory();
 
@@ -657,8 +669,14 @@ public interface ExpressionsPackage extends EPackage {
 
 		EClass INT_VALUE = eINSTANCE.getIntValue();
 
+		EAttribute INT_VALUE__VALUE = eINSTANCE.getIntValue_Value();
+
 		EClass BOOL_VALUE = eINSTANCE.getBoolValue();
 
+		EAttribute BOOL_VALUE__VALUE = eINSTANCE.getBoolValue_Value();
+
 		EClass STRING_VALUE = eINSTANCE.getStringValue();
+
+		EAttribute STRING_VALUE__VALUE = eINSTANCE.getStringValue_Value();
 	}
 }

@@ -10,4 +10,6 @@ public interface FunDefinition extends EObject, AbstractElement {
 	void setName(String value);
 
 	EList<Parameter> getVarNames();
+
+	Value interpret();
 }

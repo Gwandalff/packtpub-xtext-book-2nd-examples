@@ -1,8 +1,11 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.AbstractElement;
 import expressions.interpreter.expressions.Block;
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.Statements;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
 import org.eclipse.emf.common.notify.Notification;
@@ -101,5 +104,14 @@ public class BlockImpl extends MinimalEObjectImpl.Container implements Block {
 				return statements != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret(Context context) {
+		Value result;
+		result = (Value) (null) ;
+		for (AbstractElement element : this.getStatements().getElements()) {
+			result = (Value) (((AbstractElement) (element)).interpret((Context) (context))) ;
+		}
+		return result;
 	}
 }

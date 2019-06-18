@@ -3,6 +3,7 @@ package expressions.interpreter.expressions.impl;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.FunDefinition;
 import expressions.interpreter.expressions.Parameter;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
@@ -107,5 +108,11 @@ public class FunDefinitionImpl extends AbstractElementImpl implements FunDefinit
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret() {
+		Value result;
+		result = (Value) (null) ;
+		return result;
 	}
 }

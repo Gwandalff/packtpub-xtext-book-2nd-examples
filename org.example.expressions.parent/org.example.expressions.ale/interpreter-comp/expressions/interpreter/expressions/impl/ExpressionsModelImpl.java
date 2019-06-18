@@ -1,5 +1,6 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.AbstractElement;
 import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.ExpressionsFactory;
 import expressions.interpreter.expressions.ExpressionsModel;
@@ -115,6 +116,9 @@ public class ExpressionsModelImpl extends MinimalEObjectImpl.Container implement
 		Context context = ((Context) (ExpressionsFactory.eINSTANCE.createContext()));
 		MapService.put((EMap) (context.getValues()), (String) ("default"), (IntValue) (ExpressionsFactory.eINSTANCE.createIntValue()));
 		result = (Value) (null) ;
+		for (AbstractElement element : this.getStatements().getElements()) {
+			result = (Value) (((AbstractElement) (element)).interpret((Context) (context))) ;
+		}
 		return result;
 	}
 }

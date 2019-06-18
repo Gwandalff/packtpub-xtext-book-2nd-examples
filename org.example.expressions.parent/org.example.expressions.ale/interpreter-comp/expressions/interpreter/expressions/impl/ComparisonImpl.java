@@ -1,8 +1,14 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.BoolValue;
 import expressions.interpreter.expressions.Comparison;
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.Expression;
+import expressions.interpreter.expressions.ExpressionsFactory;
 import expressions.interpreter.expressions.ExpressionsPackage;
+import expressions.interpreter.expressions.IntValue;
+import expressions.interpreter.expressions.StringValue;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
@@ -11,6 +17,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecoretools.ale.compiler.lib.EqualService;
 
 public class ComparisonImpl extends ExpressionImpl implements Comparison {
 	protected static final String OP_EDEFAULT = null;
@@ -171,5 +178,44 @@ public class ComparisonImpl extends ExpressionImpl implements Comparison {
 				return right != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret(Context context) {
+		Value result;
+		BoolValue ret = ((BoolValue) (ExpressionsFactory.eINSTANCE.createBoolValue()));
+		if (false) {
+			String left = ((String) (((StringValue) (((Expression) (this.getLeft())).interpret((Context) (context)))).getValue()));
+			String right = ((String) (((StringValue) (((Expression) (this.getRight())).interpret((Context) (context)))).getValue()));
+			if (EqualService.equals((this.op), ("<"))) {
+				ret.setValue((left) < (right));
+			}
+			if (EqualService.equals((this.op), (">"))) {
+				ret.setValue((left) > (right));
+			}
+			if (EqualService.equals((this.op), (">="))) {
+				ret.setValue((left) >= (right));
+			}
+			if (EqualService.equals((this.op), ("<="))) {
+				ret.setValue((left) <= (right));
+			}
+		}
+		else {
+			int right = ((int) (((IntValue) (((Expression) (this.getRight())).interpret((Context) (context)))).getValue()));
+			int left = ((int) (((IntValue) (((Expression) (this.getLeft())).interpret((Context) (context)))).getValue()));
+			if (EqualService.equals((this.op), ("<"))) {
+				ret.setValue((left) < (right));
+			}
+			if (EqualService.equals((this.op), (">"))) {
+				ret.setValue((left) > (right));
+			}
+			if (EqualService.equals((this.op), (">="))) {
+				ret.setValue((left) >= (right));
+			}
+			if (EqualService.equals((this.op), ("<="))) {
+				ret.setValue((left) <= (right));
+			}
+		}
+		result = (Value) (ret) ;
+		return result;
 	}
 }

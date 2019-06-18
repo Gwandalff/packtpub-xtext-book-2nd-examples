@@ -6,4 +6,6 @@ public interface FunParamCapture extends EObject, FunParam {
 	Variable getVariable();
 
 	void setVariable(Variable value);
+
+	Value interpret(Context context);
 }

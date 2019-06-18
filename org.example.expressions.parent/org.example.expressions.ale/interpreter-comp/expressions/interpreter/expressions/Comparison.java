@@ -15,4 +15,6 @@ public interface Comparison extends EObject, Expression {
 	Expression getRight();
 
 	void setRight(Expression value);
+
+	Value interpret(Context context);
 }

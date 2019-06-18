@@ -1,8 +1,12 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.BoolValue;
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.Equality;
 import expressions.interpreter.expressions.Expression;
+import expressions.interpreter.expressions.ExpressionsFactory;
 import expressions.interpreter.expressions.ExpressionsPackage;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
@@ -11,6 +15,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecoretools.ale.compiler.lib.EqualService;
 
 public class EqualityImpl extends ExpressionImpl implements Equality {
 	protected static final String OP_EDEFAULT = null;
@@ -171,5 +176,18 @@ public class EqualityImpl extends ExpressionImpl implements Equality {
 				return right != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret(Context context) {
+		Value result;
+		BoolValue ret = ((BoolValue) (ExpressionsFactory.eINSTANCE.createBoolValue()));
+		if (EqualService.equals((this.op), ("=="))) {
+			ret.setValue(EqualService.equals((((Expression) (this.getLeft())).interpret((Context) (context))), (((Expression) (this.getRight())).interpret((Context) (context)))));
+		}
+		else {
+			ret.setValue(!EqualService.equals((((Expression) (this.getLeft())).interpret((Context) (context))), (((Expression) (this.getRight())).interpret((Context) (context)))));
+		}
+		result = (Value) (ret) ;
+		return result;
 	}
 }

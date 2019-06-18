@@ -1,13 +1,18 @@
 package expressions.interpreter.expressions.impl;
 
 import expressions.interpreter.expressions.BoolConstant;
+import expressions.interpreter.expressions.BoolValue;
+import expressions.interpreter.expressions.Context;
+import expressions.interpreter.expressions.ExpressionsFactory;
 import expressions.interpreter.expressions.ExpressionsPackage;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecoretools.ale.compiler.lib.EqualService;
 
 public class BoolConstantImpl extends ExpressionImpl implements BoolConstant {
 	protected static final String VALUE_EDEFAULT = null;
@@ -70,5 +75,13 @@ public class BoolConstantImpl extends ExpressionImpl implements BoolConstant {
 				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value interpret(Context context) {
+		Value result;
+		BoolValue ret = ((BoolValue) (ExpressionsFactory.eINSTANCE.createBoolValue()));
+		ret.setValue(EqualService.equals((this.value), ("true")));
+		result = (Value) (ret) ;
+		return result;
 	}
 }

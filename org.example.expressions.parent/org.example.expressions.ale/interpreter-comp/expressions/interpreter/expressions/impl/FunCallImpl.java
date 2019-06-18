@@ -1,9 +1,7 @@
 package expressions.interpreter.expressions.impl;
 
-import expressions.interpreter.expressions.Block;
 import expressions.interpreter.expressions.ComplexFunction;
 import expressions.interpreter.expressions.Context;
-import expressions.interpreter.expressions.Expression;
 import expressions.interpreter.expressions.ExpressionsFactory;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.FunCall;
@@ -142,14 +140,12 @@ public class FunCallImpl extends ExpressionImpl implements FunCall {
 			i = (i) + (1);
 		}
 		if (this.getFunction() instanceof InlineFunction) {
-			InlineFunction f = ((InlineFunction) (null));
-			this.getFunction();
-			result = (Value) (((Expression) (f.getExpression())).interpret((Context) (funContext))) ;
+			InlineFunction f = ((InlineFunction) (this.getFunction()));
+			result = (Value) (f.getExpression().interpret((Context) (funContext))) ;
 		}
 		if (this.getFunction() instanceof ComplexFunction) {
-			ComplexFunction f = ((ComplexFunction) (null));
-			this.getFunction();
-			result = (Value) (((Block) (f.getBody())).interpret((Context) (funContext))) ;
+			ComplexFunction f = ((ComplexFunction) (this.getFunction()));
+			result = (Value) (f.getBody().interpret((Context) (funContext))) ;
 		}
 		i = 0;
 		while ((i) < (CollectionService.size(this.getParams()))) {

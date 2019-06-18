@@ -126,11 +126,11 @@ open class FunCall {
 		
 		//interpret
 		if(self.function.oclIsKindOf(expressions::InlineFunction)){
-			expressions::InlineFunction f = self.function;
+			expressions::InlineFunction f := self.function;
 			result := f.expression.interpret(funContext);
 		}
 		if(self.function.oclIsKindOf(expressions::ComplexFunction)){
-			expressions::ComplexFunction f = self.function;
+			expressions::ComplexFunction f := self.function;
 			result := f.body.interpret(funContext);
 		}
 		

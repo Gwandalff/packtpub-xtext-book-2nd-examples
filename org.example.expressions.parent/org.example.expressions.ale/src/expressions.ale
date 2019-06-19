@@ -14,26 +14,26 @@ open class ExpressionsModel {
 }
 
 open class Variable {
-	def expressions::Value interpret() {
+	def expressions::Value interpret(expressions::Context context) {
 		result := self.expression.interpret(context);
 		context.values.put(self.name, result);
 	}
 }
 
 open class FunDefinition {
-	def expressions::Value interpret() {
+	def expressions::Value interpret(expressions::Context context) {
 		result := null;
 	}
 }
 
 open class EvalExpression {
-	def expressions::Value interpret() {
+	def expressions::Value interpret(expressions::Context context) {
 		result := self.expression.interpret(context);
 	}
 }
 
 open class Condition {
-	def expressions::Value interpret() {
+	def expressions::Value interpret(expressions::Context context) {
 		expressions::BoolValue cond := self.expression.interpret(context);
 		if(cond.isValue()){
 			self.ifz.interpret(context);
@@ -47,7 +47,7 @@ open class Condition {
 }
 
 open class Loop {
-	def expressions::Value interpret() {
+	def expressions::Value interpret(expressions::Context context) {
 		while(self.expression.interpret(context).oclAsType(expressions::BoolValue).isValue()){
 			self.body.interpret(context);
 		}
@@ -101,6 +101,18 @@ open class Block {
 	}
 }
 
+open class FunParam {
+	def expressions::Value interpret(expressions::Context context) {
+		if(self.oclIsKindOf(expressions::FunParamExp)){
+			expressions::FunParamExp funParamExp := self.oclAsType(expressions::FunParamExp);
+			result := funParamExp.interpret(context);
+		} else {
+			expressions::FunParamCapture funParamCapture := self.oclAsType(expressions::FunParamCapture);
+			result := funParamCapture.interpret(context);
+		}
+	}
+}
+
 open class FunParamExp {
 	def expressions::Value interpret(expressions::Context context) {
 		result := self.expr.interpret(context);
@@ -116,7 +128,7 @@ open class FunParamCapture {
 open class FunCall {
 	def expressions::Value interpret(expressions::Context context) {
 		expressions::Context funContext := expressions::Context.create();
-		
+		result := null;
 		// create the new context with params
 		int i := 0;
 		while(i < self.function.varNames.size()){
@@ -172,10 +184,10 @@ open class Comparison {
 			String left  := self.left. interpret(context).oclAsType(expressions::StringValue).value;
 			String right := self.right.interpret(context).oclAsType(expressions::StringValue).value;
 			
-			if(self.op == '<' ){ ret.value := left <  right;}
-			if(self.op == '>' ){ ret.value := left >  right;}
-			if(self.op == '>='){ ret.value := left >= right;}
-			if(self.op == '<='){ ret.value := left <= right;}
+			if(self.op == '<' ){ ret.value := left.compareTo(right) <  0;}
+			if(self.op == '>' ){ ret.value := left.compareTo(right) >  0;}
+			if(self.op == '>='){ ret.value := left.compareTo(right) >= 0;}
+			if(self.op == '<='){ ret.value := left.compareTo(right) <= 0;}
 			
 		} else {
 			int right := self.right.interpret(context).oclAsType(expressions::IntValue).value;

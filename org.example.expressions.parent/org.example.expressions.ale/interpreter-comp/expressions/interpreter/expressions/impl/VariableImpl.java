@@ -1,5 +1,6 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.Expression;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.Value;
@@ -9,9 +10,9 @@ import java.lang.Class;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
-import org.eclipse.acceleo.query.runtime.impl.Nothing;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -155,10 +156,10 @@ public class VariableImpl extends AbstractElementImpl implements Variable {
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
-	public Value interpret() {
+	public Value interpret(Context context) {
 		Value result;
-		result = (Value) (((Expression) (this.getExpression())).interpret((Nothing) (context))) ;
-		MapService.put((context.getValues()), (String) (this.name), (Value) (result));
+		result = (Value) (((Expression) (this.getExpression())).interpret((Context) (context))) ;
+		MapService.put((EMap) (context.getValues()), (String) (this.name), (Value) (result));
 		return result;
 	}
 }

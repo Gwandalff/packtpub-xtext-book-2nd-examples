@@ -3,12 +3,12 @@ package expressions.interpreter.expressions.impl;
 import expressions.interpreter.expressions.Block;
 import expressions.interpreter.expressions.BoolValue;
 import expressions.interpreter.expressions.Condition;
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.Expression;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
-import org.eclipse.acceleo.query.runtime.impl.Nothing;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
@@ -196,15 +196,15 @@ public class ConditionImpl extends AbstractElementImpl implements Condition {
 		return super.eIsSet(featureID);
 	}
 
-	public Value interpret() {
+	public Value interpret(Context context) {
 		Value result;
-		BoolValue cond = ((BoolValue) (((Expression) (this.getExpression())).interpret((Nothing) (context))));
+		BoolValue cond = ((BoolValue) (((Expression) (this.getExpression())).interpret((Context) (context))));
 		if (cond.isValue()) {
-			((Block) (this.getIfz())).interpret((Nothing) (context));
+			((Block) (this.getIfz())).interpret((Context) (context));
 		}
 		else {
 			if (this.getElsez() instanceof Block) {
-				((Block) (this.getElsez())).interpret((Nothing) (context));
+				((Block) (this.getElsez())).interpret((Context) (context));
 			}
 		}
 		result = (Value) (null) ;

@@ -7,5 +7,5 @@ public interface Variable extends EObject, AbstractElement, VarOrParam {
 
 	void setExpression(Expression value);
 
-	Value interpret();
+	Value interpret(Context context);
 }

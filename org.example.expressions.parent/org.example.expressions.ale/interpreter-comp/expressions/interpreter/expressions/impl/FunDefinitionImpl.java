@@ -1,5 +1,6 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.FunDefinition;
 import expressions.interpreter.expressions.Parameter;
@@ -110,7 +111,7 @@ public class FunDefinitionImpl extends AbstractElementImpl implements FunDefinit
 		return super.eIsSet(featureID);
 	}
 
-	public Value interpret() {
+	public Value interpret(Context context) {
 		Value result;
 		result = (Value) (null) ;
 		return result;

@@ -7,5 +7,5 @@ public interface EvalExpression extends EObject, AbstractElement {
 
 	void setExpression(Expression value);
 
-	Value interpret();
+	Value interpret(Context context);
 }

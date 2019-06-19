@@ -11,5 +11,5 @@ public interface FunDefinition extends EObject, AbstractElement {
 
 	EList<Parameter> getVarNames();
 
-	Value interpret();
+	Value interpret(Context context);
 }

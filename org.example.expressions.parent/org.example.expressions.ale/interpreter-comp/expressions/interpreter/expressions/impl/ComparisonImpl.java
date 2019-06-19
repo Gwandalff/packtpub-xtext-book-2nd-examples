@@ -187,16 +187,16 @@ public class ComparisonImpl extends ExpressionImpl implements Comparison {
 			String left = ((String) (((StringValue) (((Expression) (this.getLeft())).interpret((Context) (context)))).getValue()));
 			String right = ((String) (((StringValue) (((Expression) (this.getRight())).interpret((Context) (context)))).getValue()));
 			if (EqualService.equals((this.op), ("<"))) {
-				ret.setValue((left) < (right));
+				ret.setValue((left.compareTo((String) (right))) < (0));
 			}
 			if (EqualService.equals((this.op), (">"))) {
-				ret.setValue((left) > (right));
+				ret.setValue((left.compareTo((String) (right))) > (0));
 			}
 			if (EqualService.equals((this.op), (">="))) {
-				ret.setValue((left) >= (right));
+				ret.setValue((left.compareTo((String) (right))) >= (0));
 			}
 			if (EqualService.equals((this.op), ("<="))) {
-				ret.setValue((left) <= (right));
+				ret.setValue((left.compareTo((String) (right))) <= (0));
 			}
 		}
 		else {

@@ -6,6 +6,7 @@
     <semanticResources>platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel</semanticResources>
     <semanticResources>Expressions.genmodel</semanticResources>
     <semanticResources>http://www.eclipse.org/emf/2002/Ecore</semanticResources>
+    <semanticResources>ExpressionsModel.xmi</semanticResources>
     <ownedViews xmi:type="viewpoint:DView" uid="_jutC8JD5EemRIIil1avA9Q">
       <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']"/>
       <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" uid="_jyxDkJD5EemRIIil1avA9Q" name="Expressions" repPath="#_jwz7wJD5EemRIIil1avA9Q">

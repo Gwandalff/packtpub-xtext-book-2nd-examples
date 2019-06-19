@@ -134,6 +134,7 @@ public class FunCallImpl extends ExpressionImpl implements FunCall {
 	public Value interpret(Context context) {
 		Value result;
 		Context funContext = ((Context) (ExpressionsFactory.eINSTANCE.createContext()));
+		result = (Value) (null) ;
 		int i = ((int) (0));
 		while ((i) < (CollectionService.size(this.getFunction().getVarNames()))) {
 			MapService.put((EMap) (funContext.getValues()), (this.getFunction().getVarNames().get((Integer) (i)).getName()), (this.getParams().get((Integer) (i)).interpret((Context) (context))));

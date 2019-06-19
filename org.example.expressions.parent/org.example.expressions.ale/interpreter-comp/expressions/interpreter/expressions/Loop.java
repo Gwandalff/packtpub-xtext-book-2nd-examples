@@ -11,5 +11,5 @@ public interface Loop extends EObject, AbstractElement {
 
 	void setBody(Block value);
 
-	Value interpret();
+	Value interpret(Context context);
 }

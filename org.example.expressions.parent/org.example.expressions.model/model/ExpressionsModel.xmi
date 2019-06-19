@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<expressions:ExpressionsModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:expressions="http://www.example.org/expressions/Expressions"
+    xsi:schemaLocation="http://www.example.org/expressions/Expressions Expressions.ecore">
+	<statements xsi:type="Statements">
+	
+	<!--let factN(int n, int fact)-->
+	
+		<elements xsi:type="ComplexFunction" name="factN">
+			<varNames xsi:type="Parameter" name="n" type="int"></varNames>
+			<varNames xsi:type="Parameter" name="fact" type="int"></varNames>
+			<body xsi:type="Block">
+				<statements>
+				
+				<!--if n > 0-->
+				
+					<elements xsi:type="Condition">
+					<expression xsi:type="Comparison" op="<">
+						<left xsi:type="VarOrParamRef" variable="//@statments/@elements.0/@varNames.0"/>
+						<right xsi:type="IntConstant" value="0"></right>
+					</expression>
+						<ifz xsi:type="Block">
+							<statments>
+							
+							<!--eval factN(n-1,:fact)-->
+							
+								<elements xsi:type="EvalExpression">
+									<expression xsi:type="FunCall" function="//@statments/@elements.0">
+										<params xsi:type="FunParamExp">
+											<expr xsi:type="Minus">
+												<left xsi:type="VarOrParamRef" variable="//@statments/@elements.0/@varNames.0"/>
+												<right xsi:type="IntConstant" value="1"/>
+											</expr>
+										</params>
+										<params xsi:type="FunParamCapture" variable="//@statments/@elements.0/@varNames.1"/>
+									</expression>
+								</elements>
+								
+								<!--var fact = fact * n-->
+								
+								<elements xsi:type="Variable" name="fact">
+									<expression xsi:type="MulOrDiv" op="*">
+										<left  xsi:type="VarOrParamRef" variable="//@statments/@elements.0/@varNames.1"/>
+										<right xsi:type="VarOrParamRef" variable="//@statments/@elements.0/@varNames.0"/>
+									</expression>
+								</elements>
+							</statments>
+						</ifz>
+					</elements>
+					
+					<!--eval fact-->
+					
+					<elements xsi:type="EvalExpression">
+						<expression xsi:type="VarOrParamRef" variable="//@statments/@elements.0/@varNames.1"/>
+					</elements>
+				</statements>
+			</body>
+		</elements>
+		
+		<!--var sideEffect = 1-->
+		
+		<elements xsi:type="Variable" name="sideEffect">
+			<expression xsi:type="IntConstant" value="1"/>
+		</elements>
+		
+		<!--eval factN(5,:sideEffect)-->
+		
+		<elements xsi:type="EvalExpression">
+			<expression xsi:type="FunCall" function="//@statments/@elements.0">
+				<params xsi:type="FunParamExp">
+					<expr xsi:type="IntConstant" value="5"/>
+				</params>
+				<params xsi:type="FunParamCapture" variable="//@statments/@elements.1"/>
+			</expression>
+		</elements>
+		
+		<!--eval sideEffect-->
+		
+		<elements xsi:type="EvalExpression">
+			<expression xsi:type="VarOrParamRef" variable="//@statments/@elements.1"/>
+		</elements>
+	</statements>   
+</expressions:ExpressionsModel>

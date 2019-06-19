@@ -5,6 +5,7 @@ import expressions.interpreter.expressions.IntValue;
 import java.lang.Integer;
 import java.lang.Object;
 import java.lang.Override;
+import java.lang.String;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -70,5 +71,11 @@ public class IntValueImpl extends ValueImpl implements IntValue {
 				return value != VALUE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public String toString() {
+		String result;
+		result = (String) (("") + (this.value)) ;
+		return result;
 	}
 }

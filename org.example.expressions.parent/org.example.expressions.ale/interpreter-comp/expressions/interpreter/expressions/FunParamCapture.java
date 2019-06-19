@@ -3,9 +3,9 @@ package expressions.interpreter.expressions;
 import org.eclipse.emf.ecore.EObject;
 
 public interface FunParamCapture extends EObject, FunParam {
-	Variable getVariable();
+	VarOrParam getVariable();
 
-	void setVariable(Variable value);
+	void setVariable(VarOrParam value);
 
 	Value interpret(Context context);
 }

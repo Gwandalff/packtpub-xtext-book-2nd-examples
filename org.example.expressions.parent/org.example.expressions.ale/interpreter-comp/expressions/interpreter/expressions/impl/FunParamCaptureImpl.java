@@ -4,7 +4,7 @@ import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.FunParamCapture;
 import expressions.interpreter.expressions.Value;
-import expressions.interpreter.expressions.Variable;
+import expressions.interpreter.expressions.VarOrParam;
 import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 public class FunParamCaptureImpl extends FunParamImpl implements FunParamCapture {
-	protected Variable variable;
+	protected VarOrParam variable;
 
 	protected FunParamCaptureImpl() {
 		super();
@@ -25,10 +25,10 @@ public class FunParamCaptureImpl extends FunParamImpl implements FunParamCapture
 		return ExpressionsPackage.Literals.FUN_PARAM_CAPTURE;
 	}
 
-	public Variable getVariable() {
+	public VarOrParam getVariable() {
 		if (variable != null && variable.eIsProxy()) {
 			InternalEObject oldVariable = (InternalEObject) variable;
-			variable = (Variable) eResolveProxy(oldVariable);
+			variable = (VarOrParam) eResolveProxy(oldVariable);
 			if (variable != oldVariable) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ExpressionsPackage.FUN_PARAM_CAPTURE__VARIABLE, oldVariable, variable));
@@ -37,12 +37,12 @@ public class FunParamCaptureImpl extends FunParamImpl implements FunParamCapture
 		return variable;
 	}
 
-	public Variable basicGetVariable() {
+	public VarOrParam basicGetVariable() {
 		return variable;
 	}
 
-	public void setVariable(Variable newVariable) {
-		Variable oldVariable = variable;
+	public void setVariable(VarOrParam newVariable) {
+		VarOrParam oldVariable = variable;
 		variable = newVariable;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ExpressionsPackage.FUN_PARAM_CAPTURE__VARIABLE, oldVariable, variable));
@@ -63,7 +63,7 @@ public class FunParamCaptureImpl extends FunParamImpl implements FunParamCapture
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case ExpressionsPackage.FUN_PARAM_CAPTURE__VARIABLE :
-				setVariable((Variable) newValue);
+				setVariable((VarOrParam) newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -73,7 +73,7 @@ public class FunParamCaptureImpl extends FunParamImpl implements FunParamCapture
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case ExpressionsPackage.FUN_PARAM_CAPTURE__VARIABLE :
-				setVariable((Variable) null);
+				setVariable((VarOrParam) null);
 				return;
 		}
 		super.eUnset(featureID);

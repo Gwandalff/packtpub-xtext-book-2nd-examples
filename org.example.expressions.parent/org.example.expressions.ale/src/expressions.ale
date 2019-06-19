@@ -1,8 +1,15 @@
 behavior expressions;
 
 use org.example.expressions.services.MapService;
+use org.example.expressions.services.LogService;
 
 open class ExpressionsModel {
+	
+	@main
+	def void main(){
+		self.interpret().log();
+	}
+	
 	def expressions::Value interpret() {
 		expressions::Context context := expressions::Context.create();
 		context.values.put('default', expressions::IntValue.create());
@@ -180,19 +187,18 @@ open class Equality {
 open class Comparison {
 	def expressions::Value interpret(expressions::Context context) {
 		expressions::BoolValue ret := expressions::BoolValue.create();
-		if (false /*self.left.typeFor.isStringType*/) {
-			String left  := self.left. interpret(context).oclAsType(expressions::StringValue).value;
-			String right := self.right.interpret(context).oclAsType(expressions::StringValue).value;
-			
+		expressions::Value type  := self.left.interpret(context);
+		if (type.oclIsKindOf(expressions::StringValue)) {
+			String left   := type.oclAsType(expressions::StringValue).value;
+			String right  := self.right.interpret(context).oclAsType(expressions::StringValue).value;
 			if(self.op == '<' ){ ret.value := left.compareTo(right) <  0;}
 			if(self.op == '>' ){ ret.value := left.compareTo(right) >  0;}
 			if(self.op == '>='){ ret.value := left.compareTo(right) >= 0;}
 			if(self.op == '<='){ ret.value := left.compareTo(right) <= 0;}
 			
 		} else {
-			int right := self.right.interpret(context).oclAsType(expressions::IntValue).value;
-			int left  := self.left. interpret(context).oclAsType(expressions::IntValue).value;
-			
+			int left   := type.oclAsType(expressions::IntValue).value;
+			int right  := self.right.interpret(context).oclAsType(expressions::IntValue).value;		
 			if(self.op == '<' ){ ret.value := left <  right;}
 			if(self.op == '>' ){ ret.value := left >  right;}
 			if(self.op == '>='){ ret.value := left >= right;}
@@ -285,6 +291,24 @@ open class StringConstant {
 		expressions::StringValue ret := expressions::StringValue.create();
 		ret.value := self.value;
 		result := ret;
+	}
+}
+
+open class IntValue {
+	def String toString(){
+		result := '' + self.value;
+	}
+}
+
+open class BoolValue {
+	def String toString(){
+		result := '' + self.value;
+	}
+}
+
+open class StringValue {
+	def String toString(){
+		result := self.value;
 	}
 }
 

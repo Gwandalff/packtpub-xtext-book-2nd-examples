@@ -5,6 +5,7 @@ import expressions.interpreter.expressions.ExpressionsPackage;
 import java.lang.Boolean;
 import java.lang.Object;
 import java.lang.Override;
+import java.lang.String;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -70,5 +71,11 @@ public class BoolValueImpl extends ValueImpl implements BoolValue {
 				return value != VALUE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public String toString() {
+		String result;
+		result = (String) (("") + (this.value)) ;
+		return result;
 	}
 }

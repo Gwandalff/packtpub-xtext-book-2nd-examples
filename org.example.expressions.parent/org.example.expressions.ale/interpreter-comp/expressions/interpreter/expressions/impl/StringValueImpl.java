@@ -71,4 +71,10 @@ public class StringValueImpl extends ValueImpl implements StringValue {
 		}
 		return super.eIsSet(featureID);
 	}
+
+	public String toString() {
+		String result;
+		result = (String) (this.value) ;
+		return result;
+	}
 }

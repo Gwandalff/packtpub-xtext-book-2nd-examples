@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecoretools.ale.compiler.lib.LogService;
 import org.example.expressions.services.MapService;
 
 public class ExpressionsModelImpl extends MinimalEObjectImpl.Container implements ExpressionsModel {
@@ -109,6 +110,10 @@ public class ExpressionsModelImpl extends MinimalEObjectImpl.Container implement
 				return statements != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public void main() {
+		LogService.log(((ExpressionsModel) (this)).interpret());
 	}
 
 	public Value interpret() {

@@ -7,5 +7,7 @@ public interface ExpressionsModel extends EObject {
 
 	void setStatements(Statements value);
 
+	void main();
+
 	Value interpret();
 }

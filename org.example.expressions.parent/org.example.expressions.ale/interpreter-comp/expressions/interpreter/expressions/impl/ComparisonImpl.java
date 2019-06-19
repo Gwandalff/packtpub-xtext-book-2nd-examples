@@ -183,8 +183,9 @@ public class ComparisonImpl extends ExpressionImpl implements Comparison {
 	public Value interpret(Context context) {
 		Value result;
 		BoolValue ret = ((BoolValue) (ExpressionsFactory.eINSTANCE.createBoolValue()));
-		if (false) {
-			String left = ((String) (((StringValue) (((Expression) (this.getLeft())).interpret((Context) (context)))).getValue()));
+		Value type = ((Value) (((Expression) (this.getLeft())).interpret((Context) (context))));
+		if (type instanceof StringValue) {
+			String left = ((String) (((StringValue) (type)).getValue()));
 			String right = ((String) (((StringValue) (((Expression) (this.getRight())).interpret((Context) (context)))).getValue()));
 			if (EqualService.equals((this.op), ("<"))) {
 				ret.setValue((left.compareTo((String) (right))) < (0));
@@ -200,8 +201,8 @@ public class ComparisonImpl extends ExpressionImpl implements Comparison {
 			}
 		}
 		else {
+			int left = ((int) (((IntValue) (type)).getValue()));
 			int right = ((int) (((IntValue) (((Expression) (this.getRight())).interpret((Context) (context)))).getValue()));
-			int left = ((int) (((IntValue) (((Expression) (this.getLeft())).interpret((Context) (context)))).getValue()));
 			if (EqualService.equals((this.op), ("<"))) {
 				ret.setValue((left) < (right));
 			}

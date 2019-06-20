@@ -1,19 +1,18 @@
 package org.example.expressions
 
-import org.example.expressions.model.expressions.AbstractElement
-import org.example.expressions.model.expressions.Expression
-import org.example.expressions.model.expressions.ExpressionsModel
+import com.google.inject.Inject
+import expressions.AbstractElement
+import expressions.Block
+import expressions.ComplexFunction
+import expressions.Expression
+import expressions.FunDefinition
+import expressions.InlineFunction
+import expressions.Statements
+import expressions.VarOrParam
+import expressions.VarOrParamRef
+import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
-import com.google.inject.Inject
-import org.eclipse.xtext.util.IResourceScopeCache
-import org.example.expressions.model.expressions.VarOrParam
-import org.example.expressions.model.expressions.VarOrParamRef
-import org.example.expressions.model.expressions.FunDefinition
-import org.example.expressions.model.expressions.InlineFunction
-import org.example.expressions.model.expressions.ComplexFunction
-import org.example.expressions.model.expressions.Statements
-import org.example.expressions.model.expressions.Block
 
 class ExpressionsModelUtil {
 

@@ -5,8 +5,8 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.example.expressions.model.expressions.ExpressionsModel
-import org.example.expressions.model.expressions.ExpressionsPackage
+import expressions.ExpressionsModel
+import expressions.ExpressionsPackage
 import org.example.expressions.typing.ExpressionsType
 import org.example.expressions.validation.ExpressionsValidator
 import org.junit.Test

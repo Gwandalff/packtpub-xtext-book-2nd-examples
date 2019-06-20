@@ -1,29 +1,25 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.example.expressions.ui
-Bundle-Vendor: My Company
-Bundle-Version: 1.0.0.qualifier
-Bundle-SymbolicName: org.example.expressions.ui; singleton:=true
-Bundle-ActivationPolicy: lazy
-Require-Bundle: org.example.expressions,
- org.example.expressions.ide,
- org.eclipse.xtext.ui,
- org.eclipse.xtext.ui.shared,
- org.eclipse.xtext.ui.codetemplates.ui,
- org.eclipse.ui.editors;bundle-version="3.5.0",
- org.eclipse.ui.ide;bundle-version="3.5.0",
- org.eclipse.ui,
- org.eclipse.compare,
- org.eclipse.xtext.builder,org.eclipse.xtend.lib;bundle-version="2.14.0";resolution:=optional,
- org.eclipse.xtext.xbase.lib;bundle-version="2.13.0"
-Import-Package: org.apache.log4j
+Bundle-SymbolicName: org.example.expressions.ui;singleton:=true
+Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: org.example.expressions.ui,
- org.example.expressions.ui.contentassist,
- org.example.expressions.ui.hover,
+Bundle-ActivationPolicy: lazy
+Export-Package: org.example.expressions.ui.contentassist,
  org.example.expressions.ui.internal,
- org.example.expressions.ui.labeling,
- org.example.expressions.ui.outline,
  org.example.expressions.ui.quickfix
+Require-Bundle: org.eclipse.compare,
+ org.eclipse.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.xtend.lib;resolution:=optional,
+ org.eclipse.xtext.builder,
+ org.eclipse.xtext.ui,
+ org.eclipse.xtext.ui.codetemplates.ui,
+ org.eclipse.xtext.ui.shared,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.example.expressions.model;bundle-version="0.1.0",
+ org.example.expressions,
+ org.example.expressions.ide
+Import-Package: org.apache.log4j
 Bundle-Activator: org.example.expressions.ui.internal.ExpressionsActivator
 Automatic-Module-Name: org.example.expressions.ui

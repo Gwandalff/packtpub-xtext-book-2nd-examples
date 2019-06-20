@@ -11,6 +11,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
-Export-Package: org.example.expressions.model.expressions,
- org.example.expressions.model.expressions.impl,
- org.example.expressions.model.expressions.util
+Export-Package: expressions,
+ expressions.impl,
+ expressions.util

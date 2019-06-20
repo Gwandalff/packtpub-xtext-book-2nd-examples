@@ -31,14 +31,14 @@ Workflow {
 		language = StandardLanguage {
 			name = "org.example.expressions.Expressions"
 			fileExtensions = "expressions"
-
+			referencedResource = "platform:/resource/org.example.expressions.model/model/Expressions.genmodel"
+			fragment = ecore2xtext.Ecore2XtextValueConverterServiceFragment2 auto-inject {}
 			serializer = {
 				generateStub = false
 			}
 			validator = {
 				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
 			}
-			referencedResource = "platform:/resource/org.example.expressions.model/model/Expressions.genmodel"
 		}
 	}
 }

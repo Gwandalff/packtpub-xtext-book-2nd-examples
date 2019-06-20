@@ -249,6 +249,15 @@
 		<super type="org.eclipse.xtext.ui.check.expensive"/>
 		<persistent value="true"/>
 	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			category="org.example.expressions.Expressions"
+			class="org.example.expressions.ui.ExpressionsExecutableExtensionFactory:org.eclipse.xtext.ui.validation.ValidatorPreferencePage"
+			id="org.example.expressions.Expressions.validator.preferencePage"
+			name="Errors/Warnings">
+			<keywordReference id="org.example.expressions.ui.keyword_Expressions"/>
+		</page>
+	</extension>
 	<extension point="org.eclipse.xtext.builder.participant">
 		<participant
 			class="org.example.expressions.ui.ExpressionsExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"

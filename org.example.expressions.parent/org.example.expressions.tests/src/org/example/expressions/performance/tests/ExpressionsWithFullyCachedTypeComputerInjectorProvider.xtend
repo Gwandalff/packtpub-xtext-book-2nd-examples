@@ -3,7 +3,7 @@ package org.example.expressions.performance.tests
 import com.google.inject.Inject
 import org.eclipse.xtext.util.IResourceScopeCache
 import org.example.expressions.ExpressionsRuntimeModule
-import org.example.expressions.model.expressions.Expression
+import expressions.Expression
 import org.example.expressions.tests.ExpressionsInjectorProvider
 import org.example.expressions.typing.ExpressionsType
 import org.example.expressions.typing.ExpressionsTypeComputer

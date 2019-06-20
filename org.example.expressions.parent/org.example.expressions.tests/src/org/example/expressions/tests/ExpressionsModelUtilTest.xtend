@@ -8,12 +8,12 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.example.expressions.ExpressionsModelUtil
-import org.example.expressions.model.expressions.ExpressionsModel
+import expressions.ExpressionsModel
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import static extension org.junit.Assert.*
-import org.example.expressions.model.expressions.VarOrParamRef
+import expressions.VarOrParamRef
 
 @RunWith(XtextRunner)
 @InjectWith(ExpressionsInjectorProvider)

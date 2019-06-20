@@ -3,16 +3,16 @@ package org.example.expressions.performance.tests
 import com.google.inject.Inject
 import org.example.expressions.ExpressionsModelUtil
 import org.example.expressions.ExpressionsRuntimeModule
-import org.example.expressions.model.expressions.AbstractElement
-import org.example.expressions.model.expressions.ExpressionsModel
-import org.example.expressions.model.expressions.VarOrParam
-import org.example.expressions.model.expressions.VarOrParamRef
+import expressions.AbstractElement
+import expressions.ExpressionsModel
+import expressions.VarOrParam
+import expressions.VarOrParamRef
 import org.example.expressions.tests.ExpressionsInjectorProvider
 import org.example.expressions.typing.ExpressionsType
 import org.example.expressions.typing.ExpressionsTypeComputer
 
 import static extension org.eclipse.xtext.EcoreUtil2.*
-import org.example.expressions.model.expressions.Variable
+import expressions.Variable
 
 /**
  * Injector provider for testing without cache.

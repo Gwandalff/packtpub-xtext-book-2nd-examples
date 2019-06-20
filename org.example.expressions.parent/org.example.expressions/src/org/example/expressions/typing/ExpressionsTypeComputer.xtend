@@ -3,22 +3,28 @@ package org.example.expressions.typing
 import com.google.inject.Inject
 import org.eclipse.xtext.util.IResourceScopeCache
 import org.example.expressions.ExpressionsModelUtil
-import org.example.expressions.model.expressions.And
-import org.example.expressions.model.expressions.BoolConstant
-import org.example.expressions.model.expressions.Comparison
-import org.example.expressions.model.expressions.Equality
-import org.example.expressions.model.expressions.Expression
-import org.example.expressions.model.expressions.IntConstant
-import org.example.expressions.model.expressions.Minus
-import org.example.expressions.model.expressions.MulOrDiv
-import org.example.expressions.model.expressions.Not
-import org.example.expressions.model.expressions.Or
-import org.example.expressions.model.expressions.Plus
-import org.example.expressions.model.expressions.StringConstant
-import org.example.expressions.model.expressions.VarOrParamRef
-import org.example.expressions.model.expressions.VarOrParam
-import org.example.expressions.model.expressions.Variable
-import org.example.expressions.model.expressions.Parameter
+import expressions.And
+import expressions.BoolConstant
+import expressions.Comparison
+import expressions.Equality
+import expressions.Expression
+import expressions.IntConstant
+import expressions.Minus
+import expressions.MulOrDiv
+import expressions.Not
+import expressions.Or
+import expressions.Plus
+import expressions.StringConstant
+import expressions.VarOrParamRef
+import expressions.VarOrParam
+import expressions.Variable
+import expressions.Parameter
+import expressions.ComplexFunction
+import expressions.StringValue
+import expressions.IntValue
+import expressions.BoolValue
+import expressions.InlineFunction
+import expressions.FunCall
 
 class ExpressionsTypeComputer {
 	public static val STRING_TYPE = new StringType
@@ -46,6 +52,9 @@ class ExpressionsTypeComputer {
 			StringConstant: STRING_TYPE
 			IntConstant: INT_TYPE
 			BoolConstant: BOOL_TYPE
+			StringValue: STRING_TYPE
+			IntValue: INT_TYPE
+			BoolValue: BOOL_TYPE
 			Not: BOOL_TYPE
 			MulOrDiv: INT_TYPE
 			Minus: INT_TYPE
@@ -53,6 +62,7 @@ class ExpressionsTypeComputer {
 			Equality: BOOL_TYPE
 			And: BOOL_TYPE
 			Or: BOOL_TYPE
+			default: null
 		}
 	}
 
@@ -89,5 +99,17 @@ class ExpressionsTypeComputer {
 		if(parameter.type == "bool") return BOOL_TYPE
 		if(parameter.type == "int") return INT_TYPE
 		return null
+	}
+	
+	def dispatch ExpressionsType typeFor(ComplexFunction function) {
+		function.body.statements.elements.last.typeFor
+	}
+	
+	def dispatch ExpressionsType typeFor(InlineFunction function) {
+		function.expression.typeFor
+	}
+	
+	def dispatch ExpressionsType typeFor(FunCall call) {
+		call.function.typeFor
 	}
 }

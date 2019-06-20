@@ -36,6 +36,7 @@ open class FunDefinition {
 open class EvalExpression {
 	def expressions::Value interpret(expressions::Context context) {
 		result := self.expression.interpret(context);
+		result.log;
 	}
 }
 
@@ -197,8 +198,8 @@ open class Comparison {
 			if(self.op == '<='){ ret.value := left.compareTo(right) <= 0;}
 			
 		} else {
-			int left   := type.oclAsType(expressions::IntValue).value;
-			int right  := self.right.interpret(context).oclAsType(expressions::IntValue).value;		
+			Integer left   := type.oclAsType(expressions::IntValue).value;
+			Integer right  := self.right.interpret(context).oclAsType(expressions::IntValue).value;		
 			if(self.op == '<' ){ ret.value := left <  right;}
 			if(self.op == '>' ){ ret.value := left >  right;}
 			if(self.op == '>='){ ret.value := left >= right;}

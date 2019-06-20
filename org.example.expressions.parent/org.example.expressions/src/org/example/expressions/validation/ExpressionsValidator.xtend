@@ -7,23 +7,24 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.validation.Check
 import org.example.expressions.ExpressionsModelUtil
-import org.example.expressions.model.expressions.And
-import org.example.expressions.model.expressions.Comparison
-import org.example.expressions.model.expressions.Equality
-import org.example.expressions.model.expressions.Expression
-import org.example.expressions.model.expressions.ExpressionsPackage
-import org.example.expressions.model.expressions.Minus
-import org.example.expressions.model.expressions.MulOrDiv
-import org.example.expressions.model.expressions.Not
-import org.example.expressions.model.expressions.Or
-import org.example.expressions.model.expressions.Plus
+import expressions.And
+import expressions.Comparison
+import expressions.Equality
+import expressions.Expression
+import expressions.ExpressionsPackage
+import expressions.Minus
+import expressions.MulOrDiv
+import expressions.Not
+import expressions.Or
+import expressions.Plus
 import org.example.expressions.typing.ExpressionsType
 import org.example.expressions.typing.ExpressionsTypeComputer
-import org.example.expressions.model.expressions.VarOrParamRef
-import org.example.expressions.model.expressions.Variable
-import org.example.expressions.model.expressions.Parameter
-import org.example.expressions.model.expressions.Condition
-import org.example.expressions.model.expressions.Loop
+import expressions.VarOrParamRef
+import expressions.Variable
+import expressions.Parameter
+import expressions.Condition
+import expressions.Loop
+import expressions.FunCall
 
 /**
  * This class contains custom validation rules. 
@@ -35,44 +36,30 @@ class ExpressionsValidator extends AbstractExpressionsValidator {
 	protected static val ISSUE_CODE_PREFIX = "org.example.expressions."
 	public static val FORWARD_REFERENCE = ISSUE_CODE_PREFIX + "ForwardReference"
 	public static val TYPE_MISMATCH = ISSUE_CODE_PREFIX + "TypeMismatch"
+	public static val ARITY_MISMATCH = ISSUE_CODE_PREFIX + "ArityMismatch"
 
 	@Inject extension ExpressionsModelUtil
 	@Inject extension ExpressionsTypeComputer
 
 	@Check
 	def void checkForwardReference(VarOrParamRef varRef) {
-//		val variable = varRef.getVariable()
-//		println("la variable est null ? ->" + variable===null)
-//		switch(variable){
-//			Variable: println(variable.name + " = " + variable.expression)
-//			Parameter: println(variable.name + " : " + variable.type)
-//			default: println(variable.name)
-//		}
-//		println(varRef.variablesDefinedBefore)
-//		if (variable !== null && !varRef.variablesDefinedBefore.contains(
-//				variable)) {
-//			error("variable forward reference not allowed: '"
-//					+ variable.name + "'",
-//					ExpressionsPackage::eINSTANCE.varOrParamRef_Variable,
-//					FORWARD_REFERENCE, variable.name)
-//		}
-	val variable = varRef.getVariable()
-		if (!varRef.isVariableDefinedBefore)
-			error("variable forward reference not allowed: '" + variable.name + "'",
-				ExpressionsPackage.eINSTANCE.varOrParamRef_Variable,
-				FORWARD_REFERENCE, variable.name)
+		val variable = varRef.getVariable()
+			if (!varRef.isVariableDefinedBefore)
+				error("variable forward reference not allowed: '" + variable.name + "'",
+					ExpressionsPackage.eINSTANCE.varOrParamRef_Variable,
+					FORWARD_REFERENCE, variable.name)
 	}
 	
 	@Check def checkType(Condition cond) {
 		if (!cond.expression.typeFor.boolType)
-			error("loop condition need to be a boolean: ",
+			error("If's condition need to be a boolean expression",
 				ExpressionsPackage.eINSTANCE.condition_Expression,
 				TYPE_MISMATCH)
 	}
 	
 	@Check def checkType(Loop loop) {
 		if (!loop.expression.typeFor.boolType)
-			error("loop condition need to be a boolean: ",
+			error("Loop's condition need to be a boolean expression",
 				ExpressionsPackage.eINSTANCE.loop_Expression,
 				TYPE_MISMATCH)
 	}
@@ -126,6 +113,19 @@ class ExpressionsValidator extends AbstractExpressionsValidator {
 			(!leftType.isStringType && !rightType.isStringType)) {
 			checkNotBoolean(leftType, ExpressionsPackage.Literals.PLUS__LEFT)
 			checkNotBoolean(rightType, ExpressionsPackage.Literals.PLUS__RIGHT)
+		}
+	}
+	
+	@Check def checkType(FunCall call) {
+		if(call.function.varNames.length != call.params.length){
+			error("expected the same arity but " + call.function.name 
+				+ "(" + call.function.varNames.length + " Parameters) -> " 
+				+ call.params.length + " given",
+				ExpressionsPackage.Literals.EQUALITY.getEIDAttribute(), ARITY_MISMATCH)
+		}
+		
+		for(var i = 0; i<call.function.varNames.length; i++){
+			checkExpectedSame(call.function.varNames.get(i).typeFor, call.params.get(i).typeFor)
 		}
 	}
 

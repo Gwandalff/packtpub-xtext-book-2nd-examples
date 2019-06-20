@@ -7,8 +7,8 @@ import com.google.inject.Inject
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.example.expressions.model.expressions.Expression
-import org.example.expressions.model.expressions.ExpressionsModel
+import expressions.Expression
+import expressions.ExpressionsModel
 import org.example.expressions.typing.ExpressionsType
 import org.example.expressions.typing.ExpressionsTypeComputer
 import org.junit.Test

@@ -4,12 +4,11 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.Diagnostician
 import org.eclipse.xtext.ui.editor.hover.html.DefaultEObjectHoverProvider
-import org.example.expressions.model.expressions.Expression
+import expressions.*
 import org.example.expressions.interpreter.ExpressionsInterpreter
 import org.example.expressions.typing.ExpressionsTypeComputer
 
 import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
-import org.example.expressions.model.expressions.ExpressionsFactory
 
 class ExpressionsEObjectHoverProvider extends DefaultEObjectHoverProvider {
 	@Inject extension ExpressionsTypeComputer

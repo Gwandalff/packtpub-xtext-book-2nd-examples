@@ -9,7 +9,7 @@ import org.eclipse.xtext.Assignment
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
 import org.example.expressions.ExpressionsModelUtil
-import org.example.expressions.model.expressions.Expression
+import expressions.Expression
 
 /**
  * See https://www.eclipse.org/Xtext/documentation/304_ide_concepts.html#content-assist

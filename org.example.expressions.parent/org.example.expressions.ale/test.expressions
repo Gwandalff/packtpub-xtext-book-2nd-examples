@@ -1,0 +1,11 @@
+let fib(int x) {
+	var ret = 1
+	if x > 2 {
+		var ret = fib(x-1) + fib(x-2)
+	}
+	eval ret
+}
+
+eval fib(0)
+eval fib(1)
+eval fib(12)

@@ -181,11 +181,13 @@ public class EqualityImpl extends ExpressionImpl implements Equality {
 	public Value interpret(Context context) {
 		Value result;
 		BoolValue ret = ((BoolValue) (ExpressionsFactory.eINSTANCE.createBoolValue()));
+		Value lhs = ((Value) (((Expression) (this.getLeft())).interpret((Context) (context))));
+		Value rhs = ((Value) (((Expression) (this.getRight())).interpret((Context) (context))));
 		if (EqualService.equals((this.op), ("=="))) {
-			ret.setValue(EqualService.equals((((Expression) (this.getLeft())).interpret((Context) (context))), (((Expression) (this.getRight())).interpret((Context) (context)))));
+			ret.setValue(EqualService.equals((lhs), (rhs)));
 		}
 		else {
-			ret.setValue(!EqualService.equals((((Expression) (this.getLeft())).interpret((Context) (context))), (((Expression) (this.getRight())).interpret((Context) (context)))));
+			ret.setValue(!EqualService.equals((lhs), (rhs)));
 		}
 		result = (Value) (ret) ;
 		return result;

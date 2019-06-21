@@ -1,0 +1,2 @@
+let delta(int a, int b, int c) => b*b - 4*a*c
+eval delta(1,2,1)

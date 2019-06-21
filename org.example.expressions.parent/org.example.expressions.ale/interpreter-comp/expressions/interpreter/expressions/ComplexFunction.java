@@ -6,4 +6,6 @@ public interface ComplexFunction extends EObject, FunDefinition {
 	Block getBody();
 
 	void setBody(Block value);
+
+	Value call(Context context);
 }

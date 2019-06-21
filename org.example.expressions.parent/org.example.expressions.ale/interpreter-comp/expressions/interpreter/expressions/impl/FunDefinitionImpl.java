@@ -116,4 +116,10 @@ public class FunDefinitionImpl extends AbstractElementImpl implements FunDefinit
 		result = (Value) (null) ;
 		return result;
 	}
+
+	public Value call(Context context) {
+		Value result;
+		result = (Value) (null) ;
+		return result;
+	}
 }

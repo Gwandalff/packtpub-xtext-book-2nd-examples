@@ -2,7 +2,9 @@ package expressions.interpreter.expressions.impl;
 
 import expressions.interpreter.expressions.Block;
 import expressions.interpreter.expressions.ComplexFunction;
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.ExpressionsPackage;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
 import org.eclipse.emf.common.notify.Notification;
@@ -100,5 +102,11 @@ public class ComplexFunctionImpl extends FunDefinitionImpl implements ComplexFun
 				return body != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value call(Context context) {
+		Value result;
+		result = (Value) (((Block) (this.getBody())).interpret((Context) (context))) ;
+		return result;
 	}
 }

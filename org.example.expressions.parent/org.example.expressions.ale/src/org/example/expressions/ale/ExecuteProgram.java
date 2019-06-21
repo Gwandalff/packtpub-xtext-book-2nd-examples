@@ -18,7 +18,7 @@ import expressions.interpreter.expressions.ExpressionsPackage;
 
 public class ExecuteProgram {
 	public static void main(String[] args) {
-		final String file = "/udd/gjouneau/eclipse-workspace/packtpub-xtext-book-2nd-examples/org.example.expressions.parent/org.example.expressions.ale/test.expressions";
+		final String file = "/udd/gjouneau/eclipse-workspace/packtpub-xtext-book-2nd-examples/org.example.expressions.parent/org.example.expressions.tests/programs/test.expressions";
 
 		EPackage.Registry.INSTANCE.put("http://www.example.org/expressions/Expressions", ExpressionsPackage.eINSTANCE);
 

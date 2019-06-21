@@ -6,4 +6,6 @@ public interface InlineFunction extends EObject, FunDefinition {
 	Expression getExpression();
 
 	void setExpression(Expression value);
+
+	Value call(Context context);
 }

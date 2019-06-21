@@ -3,8 +3,6 @@ package expressions.interpreter.expressions.impl;
 import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.FunParam;
-import expressions.interpreter.expressions.FunParamCapture;
-import expressions.interpreter.expressions.FunParamExp;
 import expressions.interpreter.expressions.Value;
 import java.lang.Override;
 import org.eclipse.emf.ecore.EClass;
@@ -22,14 +20,7 @@ public class FunParamImpl extends MinimalEObjectImpl.Container implements FunPar
 
 	public Value interpret(Context context) {
 		Value result;
-		if (this instanceof FunParamExp) {
-			FunParamExp funParamExp = ((FunParamExp) (((FunParamExp) (this))));
-			result = (Value) (((FunParamExp) (funParamExp)).interpret((Context) (context))) ;
-		}
-		else {
-			FunParamCapture funParamCapture = ((FunParamCapture) (((FunParamCapture) (this))));
-			result = (Value) (((FunParamCapture) (funParamCapture)).interpret((Context) (context))) ;
-		}
+		result = (Value) (null) ;
 		return result;
 	}
 }

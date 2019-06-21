@@ -1,8 +1,10 @@
 package expressions.interpreter.expressions.impl;
 
+import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.Expression;
 import expressions.interpreter.expressions.ExpressionsPackage;
 import expressions.interpreter.expressions.InlineFunction;
+import expressions.interpreter.expressions.Value;
 import java.lang.Object;
 import java.lang.Override;
 import org.eclipse.emf.common.notify.Notification;
@@ -100,5 +102,11 @@ public class InlineFunctionImpl extends FunDefinitionImpl implements InlineFunct
 				return expression != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	public Value call(Context context) {
+		Value result;
+		result = (Value) (((Expression) (this.getExpression())).interpret((Context) (context))) ;
+		return result;
 	}
 }

@@ -31,12 +31,16 @@ open class FunDefinition {
 	def expressions::Value interpret(expressions::Context context) {
 		result := null;
 	}
+	
+	def expressions::Value call(expressions::Context context) {
+		result := null;
+	}
 }
 
 open class EvalExpression {
 	def expressions::Value interpret(expressions::Context context) {
 		result := self.expression.interpret(context);
-		result.log;
+		result.log();
 	}
 }
 
@@ -46,7 +50,7 @@ open class Condition {
 		if(cond.isValue()){
 			self.ifz.interpret(context);
 		} else {
-			if(self.elsez.oclIsKindOf(expressions::Block)){
+			if(self.elsez != null){
 				self.elsez.interpret(context);
 			}
 		}
@@ -66,37 +70,6 @@ open class Loop {
 open class AbstractElement {
 	def expressions::Value interpret(expressions::Context context) {
 		result := null;
-		if(self.oclIsKindOf(expressions::Variable)){
-			expressions::Variable var := self.oclAsType(expressions::Variable);
-			result := var.expression.interpret(context);
-			context.values.put(var.name, result);
-		}
-		if(self.oclIsKindOf(expressions::FunDefinition)){ 
-			result := null;
-		}
-		if(self.oclIsKindOf(expressions::EvalExpression)){
-			expressions::EvalExpression eval := self.oclAsType(expressions::EvalExpression);
-			result := eval.expression.interpret(context);
-		}
-		if(self.oclIsKindOf(expressions::Condition)){
-			expressions::Condition condition := self.oclAsType(expressions::Condition);
-			expressions::BoolValue cond := condition.expression.interpret(context);
-			if(cond.isValue()){
-				condition.ifz.interpret(context);
-			} else {
-				if(condition.elsez.oclIsKindOf(expressions::Block)){
-					condition.elsez.interpret(context);
-				}
-			}
-			result := null;
-		}
-		if(self.oclIsKindOf(expressions::Loop)){
-			expressions::Loop loop := self.oclAsType(expressions::Loop);
-			while(loop.expression.interpret(context).oclAsType(expressions::BoolValue).isValue()){
-				loop.body.interpret(context);
-			}
-			result := null;
-		}
 	}
 }
 
@@ -109,15 +82,9 @@ open class Block {
 	}
 }
 
-open class FunParam {
+open class FunParam{
 	def expressions::Value interpret(expressions::Context context) {
-		if(self.oclIsKindOf(expressions::FunParamExp)){
-			expressions::FunParamExp funParamExp := self.oclAsType(expressions::FunParamExp);
-			result := funParamExp.interpret(context);
-		} else {
-			expressions::FunParamCapture funParamCapture := self.oclAsType(expressions::FunParamCapture);
-			result := funParamCapture.interpret(context);
-		}
+		result := null;
 	}
 }
 
@@ -133,6 +100,18 @@ open class FunParamCapture {
 	}
 }
 
+open class InlineFunction {
+	def expressions::Value call(expressions::Context context) {
+		result := self.expression.interpret(context);
+	}
+}
+
+open class ComplexFunction {
+	def expressions::Value call(expressions::Context context) {
+		result := self.body.interpret(context);
+	}
+}
+
 open class FunCall {
 	def expressions::Value interpret(expressions::Context context) {
 		expressions::Context funContext := expressions::Context.create();
@@ -143,16 +122,9 @@ open class FunCall {
 			funContext.values.put(self.function.varNames.get(i).name, self.params.get(i).interpret(context));
 			i := i + 1;
 		}
-		
-		//interpret
-		if(self.function.oclIsKindOf(expressions::InlineFunction)){
-			expressions::InlineFunction f := self.function;
-			result := f.expression.interpret(funContext);
-		}
-		if(self.function.oclIsKindOf(expressions::ComplexFunction)){
-			expressions::ComplexFunction f := self.function;
-			result := f.body.interpret(funContext);
-		}
+
+		// interpret		
+		result := self.function.call(funContext);
 		
 		// update captured variables in the caller context
 		i := 0;
@@ -176,10 +148,12 @@ open class VarOrParamRef {
 open class Equality {
 	def expressions::Value interpret(expressions::Context context) {
 		expressions::BoolValue ret := expressions::BoolValue.create();
+		expressions::Value lhs := self.left.interpret(context);
+		expressions::Value rhs := self.right.interpret(context);
 		if (self.op = '==') {
-			ret.value := self.left. interpret(context) == self.right.interpret(context);
+			ret.value := lhs == rhs;
 		} else {
-			ret.value := self.left. interpret(context) != self.right.interpret(context);
+			ret.value := lhs != rhs;
 		}
 		result := ret;
 	}
@@ -239,7 +213,7 @@ open class Not {
 
 open class MulOrDiv {
 	def expressions::Value interpret(expressions::Context context) {
-		expressions::IntValue ret   := expressions::IntValue.create();
+		expressions::IntValue ret := expressions::IntValue.create();
 		expressions::IntValue left  := self.left.interpret(context);
 		expressions::IntValue right := self.right.interpret(context);
 		if (self.op == '*'){
@@ -263,11 +237,38 @@ open class Minus {
 
 open class Plus {
 	def expressions::Value interpret(expressions::Context context) {
-		expressions::IntValue ret := expressions::IntValue.create();
-		expressions::IntValue left  := self.left.interpret(context);
-		expressions::IntValue right := self.right.interpret(context);
-		ret.value := left.value + right.value;
-		result := ret;
+		result := null;
+		expressions::Value left  := self.left.interpret(context);
+		expressions::Value right := self.right.interpret(context);
+		if( left.oclIsKindOf(expressions::IntValue) ){
+			if(right.oclIsKindOf(expressions::IntValue)){
+				expressions::IntValue ret := expressions::IntValue.create();
+				expressions::IntValue rightValue := right.oclAsType(expressions::IntValue);
+				expressions::IntValue leftValue  := left. oclAsType(expressions::IntValue);
+				ret.value := leftValue.value + rightValue.value;
+				result := ret;
+			} else {
+				expressions::StringValue ret := expressions::StringValue.create();
+				expressions::StringValue rightValue := right.oclAsType(expressions::StringValue);
+				expressions::IntValue leftValue  := left. oclAsType(expressions::IntValue);
+				ret.value := leftValue.value + rightValue.value;
+				result := ret;
+			}
+		} else {
+			if(right.oclIsKindOf(expressions::IntValue)){
+				expressions::StringValue ret := expressions::StringValue.create();
+				expressions::IntValue rightValue := right.oclAsType(expressions::IntValue);
+				expressions::StringValue leftValue  := left. oclAsType(expressions::StringValue);
+				ret.value := leftValue.value + rightValue.value;
+				result := ret;
+			} else {
+				expressions::StringValue ret := expressions::StringValue.create();
+				expressions::StringValue rightValue := right.oclAsType(expressions::StringValue);
+				expressions::StringValue leftValue  := left. oclAsType(expressions::StringValue);
+				ret.value := leftValue.value + rightValue.value;
+				result := ret;
+			}
+		}
 	}
 }
 
@@ -295,6 +296,12 @@ open class StringConstant {
 	}
 }
 
+open class Value {
+	def String toString(){
+		result := null;
+	}
+}
+
 open class IntValue {
 	def String toString(){
 		result := '' + self.value;
@@ -318,3 +325,5 @@ open class Expression {
 		result := null;
 	}
 }
+
+//}

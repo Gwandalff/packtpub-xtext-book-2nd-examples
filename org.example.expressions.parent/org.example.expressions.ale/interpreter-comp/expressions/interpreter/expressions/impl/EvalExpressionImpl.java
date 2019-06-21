@@ -12,6 +12,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecoretools.ale.compiler.lib.LogService;
 
 public class EvalExpressionImpl extends AbstractElementImpl implements EvalExpression {
 	protected Expression expression;
@@ -107,6 +108,7 @@ public class EvalExpressionImpl extends AbstractElementImpl implements EvalExpre
 	public Value interpret(Context context) {
 		Value result;
 		result = (Value) (((Expression) (this.getExpression())).interpret((Context) (context))) ;
+		LogService.log(result);
 		return result;
 	}
 }

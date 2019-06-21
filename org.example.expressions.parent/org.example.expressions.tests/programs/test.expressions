@@ -1,0 +1,23 @@
+// calculate the result and remainder of the euclidian division 
+// return true if the remainder is 0
+let euclidianDiv(int remainder, int b, int result) {
+	var result = 0
+	loop(remainder >= b){
+		var remainder = remainder - b
+		var result = result + 1
+	}
+	eval remainder == 0
+}
+
+var a = 4
+var b = 2
+var res = 0
+var isDivisor = euclidianDiv(:a, b, :res)
+var out = ""
+if(isDivisor){
+	var out =  "" + b + " * " + res + " = " + (b*res)
+} else {
+	var out =  "" + b + " * " + res + " + " + a + " = " + (b*res + a)
+}
+
+eval out

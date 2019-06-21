@@ -1,6 +1,5 @@
 package expressions.interpreter.expressions.impl;
 
-import expressions.interpreter.expressions.ComplexFunction;
 import expressions.interpreter.expressions.Context;
 import expressions.interpreter.expressions.ExpressionsFactory;
 import expressions.interpreter.expressions.ExpressionsPackage;
@@ -8,7 +7,6 @@ import expressions.interpreter.expressions.FunCall;
 import expressions.interpreter.expressions.FunDefinition;
 import expressions.interpreter.expressions.FunParam;
 import expressions.interpreter.expressions.FunParamCapture;
-import expressions.interpreter.expressions.InlineFunction;
 import expressions.interpreter.expressions.Value;
 import java.lang.Integer;
 import java.lang.Object;
@@ -140,14 +138,7 @@ public class FunCallImpl extends ExpressionImpl implements FunCall {
 			MapService.put((EMap) (funContext.getValues()), (this.getFunction().getVarNames().get((Integer) (i)).getName()), (this.getParams().get((Integer) (i)).interpret((Context) (context))));
 			i = (i) + (1);
 		}
-		if (this.getFunction() instanceof InlineFunction) {
-			InlineFunction f = ((InlineFunction) (this.getFunction()));
-			result = (Value) (f.getExpression().interpret((Context) (funContext))) ;
-		}
-		if (this.getFunction() instanceof ComplexFunction) {
-			ComplexFunction f = ((ComplexFunction) (this.getFunction()));
-			result = (Value) (f.getBody().interpret((Context) (funContext))) ;
-		}
+		result = (Value) (((FunDefinition) (this.getFunction())).call((Context) (funContext))) ;
 		i = 0;
 		while ((i) < (CollectionService.size(this.getParams()))) {
 			FunParam param = ((FunParam) (this.getParams().get((Integer) (i))));

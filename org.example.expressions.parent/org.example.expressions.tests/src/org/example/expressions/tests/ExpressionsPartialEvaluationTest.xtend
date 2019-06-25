@@ -100,6 +100,34 @@ class ExpressionsPartialEvaluationTest {
 			eval isRectangle(3,4,5)
 		'''.assertInterpret(true)
 	}
+	
+	@Test def void functionRecursive() {
+		'''
+			let fib(int x){
+				var ret = 1
+				if x > 2 {
+					var ret = fib(x-1) + fib(x-2)
+				} 
+				eval ret
+			}
+			eval fib(12)
+		'''.assertInterpret(144)
+	}
+	
+	@Test def void functionComplexInInline() {
+		'''
+			let add(int x, int add){
+				var ret = x
+				var x = x + add 
+				eval ret
+			}
+			let inc(int x) => add(:x,1)
+			var after = 5
+			var before = inc(:after)
+			eval after - before
+			
+		'''.assertInterpret(1)
+	}
 
 	@Test def void functionWithCapture() {
 		'''
@@ -181,15 +209,15 @@ class ExpressionsPartialEvaluationTest {
 			
 			val res = tmp.interpret(newHashMap)
 			try {
-			expected.assertEquals(res)
+				expected.assertEquals(res)
 			} catch (AssertionError e) {
-			println('------------------------------------------------------')
-			println('BEFORE')
-			println(input)
-			println('AFTER')
-			println(serializer.serialize(tmp))
-			println('------------------------------------------------------')
-			throw e	
+				println('------------------------------------------------------')
+				println('BEFORE')
+				println(input)
+				println('AFTER')
+				println(serializer.serialize(tmp))
+				println('------------------------------------------------------')
+				throw e	
 			}
 
 		]

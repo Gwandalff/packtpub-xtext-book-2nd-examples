@@ -25,6 +25,9 @@ import expressions.IntValue
 import expressions.BoolValue
 import expressions.InlineFunction
 import expressions.FunCall
+import expressions.FunParamExp
+import expressions.FunParamCapture
+import expressions.EvalExpression
 
 class ExpressionsTypeComputer {
 	public static val STRING_TYPE = new StringType
@@ -90,6 +93,10 @@ class ExpressionsTypeComputer {
 		}
 	}
 	
+	def dispatch ExpressionsType typeFor(EvalExpression eval) {
+		eval?.expression?.typeFor
+	}
+	
 	def dispatch ExpressionsType typeFor(Variable variable) {
 		variable?.expression?.typeFor
 	}
@@ -112,4 +119,13 @@ class ExpressionsTypeComputer {
 	def dispatch ExpressionsType typeFor(FunCall call) {
 		call.function.typeFor
 	}
+	
+	def dispatch ExpressionsType typeFor(FunParamExp param) {
+		param.expr.typeFor
+	}
+	
+	def dispatch ExpressionsType typeFor(FunParamCapture param) {
+		param.variable.typeFor
+	}
+	
 }

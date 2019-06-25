@@ -33,11 +33,16 @@ import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.example.expressions.typing.ExpressionsTypeComputer
+import static extension org.eclipse.xtext.EcoreUtil2.copy;
+import expressions.FunParamCapture
+import javax.lang.model.element.VariableElement
 
 class PartialEvaluator {
 
 	@Inject extension ExpressionsTypeComputer
 //	@Inject IResourceScopeCache cache
+
+	int callStackSize = 0
 
 	// CONSTANT : Nothing to do
 	def dispatch EObject partialEvaluation(IntConstant    e,List<AbstractElement> context) {e}
@@ -160,31 +165,62 @@ class PartialEvaluator {
 	}
 	
 	def dispatch EObject partialEvaluation(FunCall e,List<AbstractElement> context) {
+		if(callStackSize>0) return e
 		val function = e.function
-		
-		// create the new context with param
-		for(var i = 0; i<function.varNames.length; i++){
-			val param = e.params.get(i)
-			if(param instanceof FunParamExp){
-				val line = ExpressionsFactory.eINSTANCE.createVariable
-				line.name = function.varNames.get(i).name
-				line.expression = param.expr.partialEvaluation(context) as Expression
-				context.add(line)
-			}
-		}
 		
 		// partialEvaluation
 		if(function instanceof InlineFunction){
-			function.expression
+			// create the new context with param
+			for(var i = 0; i<function.varNames.length; i++){
+				val param = e.params.get(i)
+				if(param instanceof FunParamExp){
+					val line = ExpressionsFactory.eINSTANCE.createVariable
+					line.name = function.varNames.get(i).name
+					line.expression = param.expr.partialEvaluation(context) as Expression
+					context.add(line)
+				} else if (param instanceof FunParamCapture) {
+					val v = ExpressionsFactory.eINSTANCE.createVariable
+					v.name = param.variable.name
+					var ex = null as Expression
+					if(param.typeFor.isBoolType){
+						ex = ExpressionsFactory.eINSTANCE.createBoolConstant
+					} else if(param.typeFor.isIntType){
+						ex = ExpressionsFactory.eINSTANCE.createIntConstant
+					} else if(param.typeFor.isStringType){
+						ex = ExpressionsFactory.eINSTANCE.createStringConstant
+					}
+					v.expression = ex
+					val ref = ExpressionsFactory.eINSTANCE.createVarOrParamRef
+					ref.variable = v
+					function.expression.replace(function.varNames.get(i).name,ref)
+				}
+			}
+			return function.expression
 		}
 		if(function instanceof ComplexFunction){
-			val block = function.body
+			val block = function.body.copy
+			
+			// create the new context with param
+			for(var i = 0; i<function.varNames.length; i++){
+				val param = e.params.get(i)
+				if(param instanceof FunParamExp){
+					val line = ExpressionsFactory.eINSTANCE.createVariable
+					line.name = function.varNames.get(i).name
+					line.expression = param.expr.partialEvaluation(context) as Expression
+					context.add(line)
+				} else if (param instanceof FunParamCapture) {
+					val ref = ExpressionsFactory.eINSTANCE.createVarOrParamRef
+					ref.variable = param.variable
+					block.replace(function.varNames.get(i).name, ref)
+				}
+			}
+			
 			context.addAll(block.statements.elements.subList(0,block.statements.elements.length-1))
 			if(block.statements.elements.last instanceof EvalExpression){
-				(block.statements.elements.last as EvalExpression).expression
+				return (block.statements.elements.last as EvalExpression).expression
 			}
 			if(block.statements.elements.last instanceof Variable){
-				(block.statements.elements.last as Variable).expression
+				return (block.statements.elements.last as Variable).expression
 			}
 		}
 	}
@@ -195,7 +231,7 @@ class PartialEvaluator {
 			val newContext = new ArrayList<AbstractElement>()
 			val partialEvaluated = e.statements.elements.get(i).partialEvaluation(newContext) as AbstractElement
 			evalStatements.elements.addAll(newContext)
-			if(partialEvaluated !== null) evalStatements.elements.add(partialEvaluated)
+			if(partialEvaluated !== null) evalStatements.elements.add(partialEvaluated.copy)
 		}
 		e.statements = evalStatements
 		e
@@ -209,9 +245,11 @@ class PartialEvaluator {
 		val evalStatements = ExpressionsFactory.eINSTANCE.createStatements()
 		for(var i = 0; i < e.statements.elements.length; i++){
 			val newContext = new ArrayList<AbstractElement>()
-			val partialEvaluated = e.statements.elements.get(i).partialEvaluation(newContext) as AbstractElement
+			val tmp = e.statements.elements.get(i)
+			val partialEvaluated = tmp.partialEvaluation(newContext) as AbstractElement
+			println("context in Model : " + newContext)
 			evalStatements.elements.addAll(newContext)
-			if(partialEvaluated !== null) evalStatements.elements.add(partialEvaluated)
+			if(partialEvaluated !== null) evalStatements.elements.add(partialEvaluated.copy)
 		}
 		e.statements = evalStatements
 		e
@@ -340,30 +378,40 @@ class PartialEvaluator {
 				
 				if(n<1 || n>max) return null
 				
-				val copier = new EcoreUtil.Copier()
 				for(var i = 0; i < n; i++){
-					val tempBlock = copier.copy(e.body)
+					val tempBlock = e.body.copy
 					val varValue = ExpressionsFactory.eINSTANCE.createIntConstant()
 					varValue.value = init + (i*step)
 					tempBlock.replace(varname, varValue)
+					context.addAll(tempBlock.statements.elements)
 				}
+				return null
 				
 			} catch (Exception ex){
 				return e
 			}
-			return null
 		}
 		e
 	}
 	
 	def dispatch EObject partialEvaluation(Condition e, List<AbstractElement> context) {
+		println("Cond before PE : " + e.expression)
 		e.expression = e.expression.partialEvaluation(context) as Expression
+		println("Cond after PE : " + e.expression)
 		if(e.expression instanceof BoolConstant){
+			println("BoolConstant : " + Boolean::parseBoolean((e.expression as BoolConstant).value))
+			println("BoolConstant string value : " + (e.expression as BoolConstant).value)
 			if(Boolean::parseBoolean((e.expression as BoolConstant).value)){
-				context.addAll((e.ifz.partialEvaluation(context) as Block).statements.elements)
+				val tempBlock = e.ifz.copy
+				context.addAll(tempBlock.statements.elements)
+				println("context in cond" + context)
 				return null
 			} else {
-				if(e.elsez !== null)context.addAll((e.elsez.partialEvaluation(context) as Block).statements.elements)
+				if(e.elsez !== null){
+					val tempBlock = e.elsez.copy
+					context.addAll(tempBlock.statements.elements)
+					println("context in cond" + context)
+				}
 				return null
 			}
 		}
@@ -380,19 +428,16 @@ class PartialEvaluator {
 	}
 	
 	def dispatch EObject partialEvaluation(InlineFunction e, List<AbstractElement> context) {
+		callStackSize++
 		e.expression = e.expression.partialEvaluation(context) as Expression
+		callStackSize--
 		e
 	}
 	
 	def dispatch EObject partialEvaluation(ComplexFunction e, List<AbstractElement> context) {
-		val block = e.body.partialEvaluation(context) as Block
-		context.addAll(block.statements.elements.subList(0,block.statements.elements.length-1))
-		if(block.statements.elements.last instanceof EvalExpression){
-			(block.statements.elements.last as EvalExpression).expression
-		}
-		if(block.statements.elements.last instanceof Variable){
-			(block.statements.elements.last as Variable).expression
-		}
+		callStackSize++
+		e.body = e.body.partialEvaluation(context) as Block
+		callStackSize--
 		e
 	}
 	
@@ -402,6 +447,10 @@ class PartialEvaluator {
 	}
 	
 	// Dispatch for the variable replacement
+	
+	def dispatch Expression replace(IntConstant    e, String varname, Expression replacement) {null}
+	def dispatch Expression replace(BoolConstant   e, String varname, Expression replacement) {null}
+	def dispatch Expression replace(StringConstant e, String varname, Expression replacement) {null}
 	
 	def dispatch Expression replace(MulOrDiv e, String varname, Expression replacement) {
 		var left = e.left.replace(varname,replacement)
@@ -473,6 +522,11 @@ class PartialEvaluator {
 			if(param instanceof FunParamExp){
 				param.expr.replace(varname, replacement)
 			}
+			if(param instanceof FunParamCapture){
+				if(replacement instanceof VarOrParamRef){
+					param.variable = replacement.variable
+				}
+			}
 		}
 		return null
 	}
@@ -518,7 +572,13 @@ class PartialEvaluator {
 	}
 	
 	def dispatch Expression replace(Variable e, String varname, Expression replacement) {
-		e.expression.replace(varname, replacement)
+		if(e.name == varname && replacement instanceof VarOrParamRef){
+			e.name = (replacement as VarOrParamRef).variable.name
+			var right = e.expression.replace(varname, replacement)
+			if(right !== null){
+				e.expression = right
+			}
+		}
 		return null
 	}
 }

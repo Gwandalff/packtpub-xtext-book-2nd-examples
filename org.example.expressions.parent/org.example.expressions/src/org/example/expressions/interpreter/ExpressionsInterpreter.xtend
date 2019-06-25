@@ -1,44 +1,43 @@
 package org.example.expressions.interpreter
 
 import com.google.inject.Inject
-import org.eclipse.xtext.util.IResourceScopeCache
 import expressions.AbstractElement
 import expressions.And
+import expressions.Block
 import expressions.BoolConstant
 import expressions.Comparison
+import expressions.ComplexFunction
+import expressions.Condition
 import expressions.Equality
+import expressions.EvalExpression
 import expressions.Expression
+import expressions.ExpressionsModel
+import expressions.FunCall
+import expressions.FunDefinition
+import expressions.FunParamCapture
+import expressions.FunParamExp
+import expressions.InlineFunction
 import expressions.IntConstant
+import expressions.Loop
 import expressions.Minus
 import expressions.MulOrDiv
 import expressions.Not
 import expressions.Or
 import expressions.Plus
 import expressions.StringConstant
-import org.example.expressions.typing.ExpressionsTypeComputer
-import java.util.Map
 import expressions.VarOrParamRef
-import expressions.FunCall
-import java.util.HashMap
 import expressions.Variable
-import expressions.FunDefinition
-import expressions.ExpressionsModel
-import org.example.expressions.typing.StringType
+import java.util.HashMap
+import java.util.Map
 import org.example.expressions.typing.BoolType
+import org.example.expressions.typing.ExpressionsTypeComputer
 import org.example.expressions.typing.IntType
-import expressions.EvalExpression
-import expressions.Condition
-import expressions.Loop
-import expressions.InlineFunction
-import expressions.ComplexFunction
-import expressions.Block
-import expressions.FunParamCapture
-import expressions.FunParamExp
+import org.example.expressions.typing.StringType
 
 class ExpressionsInterpreter {
  
 	@Inject extension ExpressionsTypeComputer
-	@Inject IResourceScopeCache cache
+//	@Inject IResourceScopeCache cache
 
 	// CONSTANT
 	def dispatch Object interpret(IntConstant e,Map<String, Object> context) {

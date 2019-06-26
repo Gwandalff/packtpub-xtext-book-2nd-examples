@@ -108,6 +108,25 @@ class PartialEvaluator {
 			out.value = value
 			return out
 		}
+		if(e.left instanceof StringConstant && e.right instanceof IntConstant){
+			val out = ExpressionsFactory.eINSTANCE.createStringConstant
+			val value = (e.left as StringConstant).value + (e.right as IntConstant).value
+			out.value = value
+			return out
+		}
+		if(e.left instanceof StringConstant && e.right instanceof StringConstant){
+			val out = ExpressionsFactory.eINSTANCE.createStringConstant
+			val value = (e.left as StringConstant).value + (e.right as StringConstant).value
+			out.value = value
+			return out
+		}
+		if(e.left instanceof StringConstant && e.right instanceof BoolConstant){
+			val out = ExpressionsFactory.eINSTANCE.createStringConstant
+			val value = (e.left as StringConstant).value + (e.right as BoolConstant).value
+			out.value = value
+			return out
+		}
+		
 		e
 	}
 	
@@ -116,18 +135,30 @@ class PartialEvaluator {
 		e.expression = e.expression.partialEvaluation(context) as Expression
 
 		if(e.expression instanceof Not){
-			(e.expression as Not).expression
+			return (e.expression as Not).expression
+		}
+		if(e.expression instanceof BoolConstant){
+			val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+			val value = '' + !Boolean.parseBoolean((e.expression as BoolConstant).value)
+			out.value = value
+			return out
 		}
 		e
 	}
 	def dispatch EObject partialEvaluation(And e,List<AbstractElement> context) {
 		e.left = e.left.partialEvaluation(context) as Expression
 		e.right = e.right.partialEvaluation(context) as Expression
-		if((e.left instanceof BoolConstant && !Boolean::parseBoolean((e.left as BoolConstant).value)) ||
-			(e.right instanceof BoolConstant && !Boolean::parseBoolean((e.right as BoolConstant).value))
+		if(((e.left instanceof BoolConstant) && !Boolean.parseBoolean((e.left as BoolConstant).value)) || 
+			((e.right instanceof BoolConstant) && !Boolean.parseBoolean((e.right as BoolConstant).value))
 		){
 			val out = ExpressionsFactory.eINSTANCE.createBoolConstant
 			val value = 'false'
+			out.value = value
+			return out
+		}
+		if((e.left instanceof BoolConstant) && (e.right instanceof BoolConstant)){
+			val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+			val value = '' + (Boolean.parseBoolean((e.left as BoolConstant).value) && Boolean.parseBoolean((e.right as BoolConstant).value))
 			out.value = value
 			return out
 		}
@@ -136,11 +167,17 @@ class PartialEvaluator {
 	def dispatch EObject partialEvaluation(Or e,List<AbstractElement> context) {
 		e.left = e.left.partialEvaluation(context) as Expression
 		e.right = e.right.partialEvaluation(context) as Expression
-		if((e.left instanceof BoolConstant && Boolean::parseBoolean((e.left as BoolConstant).value)) ||
-			(e.right instanceof BoolConstant && Boolean::parseBoolean((e.right as BoolConstant).value))
+		if(((e.left instanceof BoolConstant) && Boolean.parseBoolean((e.left as BoolConstant).value)) || 
+			((e.right instanceof BoolConstant) && Boolean.parseBoolean((e.right as BoolConstant).value))
 		){
 			val out = ExpressionsFactory.eINSTANCE.createBoolConstant
 			val value = 'true'
+			out.value = value
+			return out
+		}
+		if((e.left instanceof BoolConstant) && (e.right instanceof BoolConstant)){
+			val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+			val value = '' + (Boolean.parseBoolean((e.left as BoolConstant).value) || Boolean.parseBoolean((e.right as BoolConstant).value))
 			out.value = value
 			return out
 		}
@@ -149,13 +186,108 @@ class PartialEvaluator {
 	
 	// COMPARISON
 	def dispatch EObject partialEvaluation(Equality e,List<AbstractElement> context) {
-		e.left = e.left.partialEvaluation(context) as Expression
+		e.left  = e.left.partialEvaluation(context) as Expression
 		e.right = e.right.partialEvaluation(context) as Expression
+		
+		if(e.left instanceof IntConstant && e.right instanceof IntConstant){
+			if(e.op == "=="){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as IntConstant).value == (e.right as IntConstant).value
+				out.value = ""+value
+				return out
+			}
+			if(e.op == "!="){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as IntConstant).value != (e.right as IntConstant).value
+				out.value = ""+value
+				return out
+			}
+		} else if(e.left instanceof StringConstant && e.right instanceof StringConstant){
+			if(e.op == "=="){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as StringConstant).value == (e.right as StringConstant).value
+				out.value = ""+value
+				return out
+			}
+			if(e.op == "!="){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as StringConstant).value != (e.right as StringConstant).value
+				out.value = ""+value
+				return out
+			}
+		} else if(e.left instanceof BoolConstant && e.right instanceof BoolConstant){
+			if(e.op == "=="){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as BoolConstant).value == (e.right as BoolConstant).value
+				out.value = ""+value
+				return out
+			}
+			if(e.op == "!="){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as BoolConstant).value != (e.right as BoolConstant).value
+				out.value = ""+value
+				return out
+			}
+		}
+
 		e
 	}
 	def dispatch EObject partialEvaluation(Comparison e,List<AbstractElement> context) {
-		e.left = e.left.partialEvaluation(context) as Expression
+		e.left  = e.left.partialEvaluation(context) as Expression
 		e.right = e.right.partialEvaluation(context) as Expression
+		
+		if(e.left instanceof IntConstant && e.right instanceof IntConstant){
+			if(e.op == "<"){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as IntConstant).value < (e.right as IntConstant).value
+				out.value = ""+value
+				return out
+			}
+			if(e.op == ">"){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as IntConstant).value > (e.right as IntConstant).value
+				out.value = ""+value
+				return out
+			}
+			if(e.op == "<="){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as IntConstant).value <= (e.right as IntConstant).value
+				out.value = ""+value
+				return out
+			}
+			if(e.op == ">="){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as IntConstant).value >= (e.right as IntConstant).value
+				out.value = ""+value
+				return out
+			}
+		} else if(e.left instanceof StringConstant && e.right instanceof StringConstant){
+			if(e.op == "<"){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as StringConstant).value < (e.right as StringConstant).value
+				out.value = ""+value
+				return out
+			}
+			if(e.op == ">"){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as StringConstant).value > (e.right as StringConstant).value
+				out.value = ""+value
+				return out
+			}
+			if(e.op == "<="){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as StringConstant).value <= (e.right as StringConstant).value
+				out.value = ""+value
+				return out
+			}
+			if(e.op == ">="){
+				val out = ExpressionsFactory.eINSTANCE.createBoolConstant
+				val value = (e.left as StringConstant).value >= (e.right as StringConstant).value
+				out.value = ""+value
+				return out
+			}
+		}
+
 		e
 	}
 	

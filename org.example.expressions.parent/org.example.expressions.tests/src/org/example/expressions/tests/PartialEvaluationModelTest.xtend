@@ -27,67 +27,88 @@ class PartialEvaluationModelTest {
 	@Inject extension PartialEvaluator
 	@Inject EqualityHelper eq
 
-	@Test def void intConstant() { "eval 1".assertPartialEvaluated(1) }
+	@Test def void intConstant() { "eval 1".assertPartialEvaluated("eval 1") }
 
-	@Test def void boolConstant() { "eval true".assertPartialEvaluated(true) }
+	@Test def void boolConstant() { "eval true".assertPartialEvaluated("eval true") }
 
-	@Test def void stringConstant() { "eval 'abc'".assertPartialEvaluated("abc") }
+	@Test def void stringConstant() { "eval 'abc'".assertPartialEvaluated("eval 'abc'") }
 
-	@Test def void multi() { "eval 5 * 3".assertPartialEvaluated(15) }
+	@Test def void multi() { "eval 5 * 3".assertPartialEvaluated("eval 15") }
 
-	@Test def void div() { "eval 6 / 3".assertPartialEvaluated(2) }
+	@Test def void div() { "eval 6 / 3".assertPartialEvaluated("eval 2") }
 
-	@Test def void minus() { "eval 6 - 2".assertPartialEvaluated(4) }
+	@Test def void minus() { "eval 6 - 2".assertPartialEvaluated("eval 4") }
 
-	@Test def void intPlus() { "eval 6 + 2".assertPartialEvaluated(8) }
+	@Test def void intPlus() { "eval 6 + 2".assertPartialEvaluated("eval 8") }
 
-	@Test def void stringPlus() { "eval 'a' + 'b'".assertPartialEvaluated('ab') }
+	@Test def void stringPlus() { "eval 'a' + 'b'".assertPartialEvaluated("eval 'ab'") }
 
-	@Test def void intStringPlus() { "eval 'a' + 1".assertPartialEvaluated('a1') }
+	@Test def void intStringPlus() { "eval 'a' + 1".assertPartialEvaluated("eval 'a1'") }
 
-	@Test def void boolStringPlus() { "eval 'a' + true".assertPartialEvaluated('atrue') }
+	@Test def void boolStringPlus() { "eval 'a' + true".assertPartialEvaluated("eval 'atrue'") }
 
-	@Test def void lessThanInt() { "eval 1 < 2".assertPartialEvaluated(true) }
+	@Test def void lessThanInt() { "eval 1 < 2".assertPartialEvaluated("eval true") }
 
-	@Test def void lessEqualsThanInt() { "eval 2 <= 2".assertPartialEvaluated(true) }
+	@Test def void lessEqualsThanInt() { "eval 2 <= 2".assertPartialEvaluated("eval true") }
 
-	@Test def void greaterThanInt() { "eval 1 > 2".assertPartialEvaluated(false) }
+	@Test def void greaterThanInt() { "eval 1 > 2".assertPartialEvaluated("eval false") }
 
-	@Test def void greaterEqualsThanInt() { "eval 2 >= 1".assertPartialEvaluated(true) }
+	@Test def void greaterEqualsThanInt() { "eval 2 >= 1".assertPartialEvaluated("eval true") }
 
-	@Test def void lessThanString() { "eval 'a' < 'b'".assertPartialEvaluated(true) }
+	@Test def void lessThanString() { "eval 'a' < 'b'".assertPartialEvaluated("eval true") }
 
-	@Test def void lessEqualsThanString() { "eval 'a' <= 'ab'".assertPartialEvaluated(true) }
+	@Test def void lessEqualsThanString() { "eval 'a' <= 'ab'".assertPartialEvaluated("eval true") }
 
-	@Test def void greaterThanString() { "eval 'ab' > 'a'".assertPartialEvaluated(true) }
+	@Test def void greaterThanString() { "eval 'ab' > 'a'".assertPartialEvaluated("eval true") }
 
-	@Test def void greaterEqualsThanString() { "eval 'a' >= 'ab'".assertPartialEvaluated(false) }
+	@Test def void greaterEqualsThanString() { "eval 'a' >= 'ab'".assertPartialEvaluated("eval false") }
 
-	@Test def void equalsString() { "eval 'a' == 'a'".assertPartialEvaluated(true) }
+	@Test def void equalsString() { "eval 'a' == 'a'".assertPartialEvaluated("eval true") }
 
-	@Test def void notEqualsString() { "eval 'a' != 'b'".assertPartialEvaluated(true) }
+	@Test def void notEqualsString() { "eval 'a' != 'b'".assertPartialEvaluated("eval true") }
 
-	@Test def void equalsInt() { "eval 1 == 1".assertPartialEvaluated(true) }
+	@Test def void equalsInt() { "eval 1 == 1".assertPartialEvaluated("eval true") }
 
-	@Test def void notEqualsInt() { "eval 0 != 1".assertPartialEvaluated(true) }
+	@Test def void notEqualsInt() { "eval 0 != 1".assertPartialEvaluated("eval true") }
 
-	@Test def void equalsBool() { "eval true == true".assertPartialEvaluated(true) }
+	@Test def void equalsBool() { "eval true == true".assertPartialEvaluated("eval true") }
 
-	@Test def void notEqualsBool() { "eval true != false".assertPartialEvaluated(true) }
+	@Test def void notEqualsBool() { "eval true != false".assertPartialEvaluated("eval true") }
 
-	@Test def void and() { "eval true && !false".assertPartialEvaluated(true) }
+	@Test def void and() { "eval true && !false".assertPartialEvaluated("eval true") }
 
-	@Test def void or() { "eval false || true".assertPartialEvaluated(true) }
+	@Test def void or() { "eval false || true".assertPartialEvaluated("eval true") }
 
-	@Test def void varRef() { "var i = 1 var j = i + 2 eval j+1".assertPartialEvaluated(4) }
+	@Test def void varRef() { "var i = 1 var j = i + 2 eval j+1".assertPartialEvaluated("var i = 1 var j = i + 2 eval j+1") }
 
-	@Test def void varSameVarRef() { "var i = 1 eval i+i".assertPartialEvaluated(2) }
+	@Test def void varSameVarRef() { "var i = 1 eval i+i".assertPartialEvaluated("var i = 1 eval i+i") }
 
-	@Test def void function() { "let inc(int i) => i+1 eval inc(3)".assertPartialEvaluated(4) }
+	@Test def void function() { "let inc(int i) => i+1 eval inc(3)".assertPartialEvaluated(
+		'''
+		let inc(int i) => i+1 
+		var i = 3
+		eval i + 1
+		'''
+	) }
 
-	@Test def void functionWithVar() { "let inc(int i) => i+1 var j = 3*4 eval inc(j)".assertPartialEvaluated(13) }
+	@Test def void functionWithVar() { "let inc(int i) => i+1 var j = 3*4 eval inc(j)"
+		.assertPartialEvaluated(
+			'''
+			let inc(int i) => i+1 
+			var j = 12
+			var i = j
+			eval i + 1
+			'''
+		)
+	}
 
-	@Test def void functionSameParamNameAsVar() { "let inc(int i) => i+1 var i = 42 eval inc(i)".assertPartialEvaluated(43) }
+	@Test def void functionSameParamNameAsVar() { "let inc(int i) => i+1 var i = 42 eval inc(i)"
+		.assertPartialEvaluated('''
+		let inc(int i) => i+1 
+		var i = 42 
+		var i = i
+		eval i+1
+	''') }
 
 	@Test def void functionComplex() {
 		'''
@@ -98,7 +119,22 @@ class PartialEvaluationModelTest {
 				eval aLong||bLong||cLong
 			} 
 			eval isRectangle(3,4,5)
-		'''.assertPartialEvaluated(true)
+		'''.assertPartialEvaluated(
+		'''
+			let isRectangle(int a, int b, int c){ 
+				var aLong = a*a == b*b + c*c 
+				var bLong = b*b == a*a + c*c 
+				var cLong = c*c == b*b + a*a 
+				eval aLong||bLong||cLong
+			} 
+			var a = 3
+			var b = 4
+			var c = 5
+			var aLong = a*a == b*b + c*c 
+			var bLong = b*b == a*a + c*c 
+			var cLong = c*c == b*b + a*a 
+			eval aLong||bLong||cLong
+		''')
 	}
 	
 	@Test def void functionRecursive() {
@@ -111,7 +147,23 @@ class PartialEvaluationModelTest {
 				eval ret
 			}
 			eval fib(12)
-		'''.assertPartialEvaluated(144)
+		'''.assertPartialEvaluated(
+			'''
+			let fib(int x){
+				var ret = 1
+				if x > 2 {
+					var ret = fib(x-1) + fib(x-2)
+				} 
+				eval ret
+			}
+			var x = 12
+			var ret = 1
+			if x > 2 {
+				var ret = fib(x-1) + fib(x-2)
+			}
+			eval ret
+			'''
+		)
 	}
 	
 	@Test def void functionComplexInInline() {
@@ -126,7 +178,19 @@ class PartialEvaluationModelTest {
 			var before = inc(:after)
 			eval after - before
 			
-		'''.assertPartialEvaluated(1)
+		'''.assertPartialEvaluated(
+			'''
+			let add(int x, int add){
+				var ret = x
+				var x = x + add 
+				eval ret
+			}
+			let inc(int x) => add(:x,1)
+			var after = 5
+			var before = add(:after,1)
+			eval after - before
+			'''
+		)
 	}
 
 	@Test def void functionWithCapture() {
@@ -139,7 +203,20 @@ class PartialEvaluationModelTest {
 			eval addNminus(4,2,:sideEffect)
 			eval sideEffect
 			
-		'''.assertPartialEvaluated(2)
+		'''.assertPartialEvaluated(
+			'''
+			let addNminus(int a, int b, int minus) { 
+				var minus = a - b 
+				eval a + b
+			} 
+			var sideEffect = 0
+			var a = 4
+			var b = 2
+			var sideEffect = a - b
+			eval a + b
+			eval sideEffect
+			'''
+		)
 	}
 
 	@Test def void functionWithCaptureRecursive() {
